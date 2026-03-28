@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Heliora Consulting Limited — Nigeria's specialist solar engineering consultancy. Owner's Engineer services, feasibility studies, ESIA, and technical advisory for MDAs, EPC contractors, project developers, and development agencies." />
+  <meta property="og:title" content="Heliora Consulting Limited | Solar Engineering. Precisely Delivered." />
+  <meta property="og:description" content="Independent Owner's Engineer and technical consulting services for solar and rural electrification projects across Nigeria and West Africa." />
+  <meta property="og:type" content="website" />
+  <title>Heliora Consulting Limited | Solar Engineering. Precisely Delivered.</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            h: {
+              white:   '#ffffff',
+              offwhite:'#f5f5f7',
+              subtle:  '#fbfbfd',
+              body:    '#1d1d1f',
+              mid:     '#515154',
+              muted:   '#86868b',
+              border:  '#d2d2d7',
+              divider: '#e8e8ed',
+              orange:  '#f47c20',
+              orangelt:'#fff3e8',
+              navy:    '#1b2e6e',
+              navylt:  '#eef1f9',
+              navymid: '#2a4494',
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system','BlinkMacSystemFont','Inter','system-ui','sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','GA_MEASUREMENT_ID');</script>
+</head>
+
+<body class="bg-white text-h-body font-sans antialiased overflow-x-hidden">
+
+<!-- ═══════════════════════ NAVBAR ═══════════════════════ -->
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-400">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12">
+    <nav class="flex items-center justify-between h-[60px]">
+
+      <a href="#home" class="flex items-center gap-3 flex-shrink-0">
+        <img src="assets/images/logo.png" alt="Heliora Consulting Limited" class="h-9 w-auto"
+             onerror="this.style.display='none';document.getElementById('logo-fb').style.display='flex';" />
+        <div id="logo-fb" class="hidden items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-h-orange to-amber-500 flex items-center justify-center font-black text-white text-sm">H</div>
+          <div>
+            <div class="text-h-body font-black text-[13px] tracking-[0.06em] leading-none">HELIORA</div>
+            <div class="text-h-orange text-[8px] tracking-[0.2em] uppercase font-semibold leading-none mt-0.5">Consulting Limited</div>
+          </div>
+        </div>
+      </a>
+
+      <ul class="hidden lg:flex items-center gap-7">
+        <li><a href="#services" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Services</a></li>
+        <li><a href="#clients"  class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Who We Serve</a></li>
+        <li><a href="#why-us"   class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Why Heliora</a></li>
+        <li><a href="#process"  class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Our Process</a></li>
+        <li><a href="#contact"  class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Contact</a></li>
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <a href="#contact" class="hidden lg:inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-h-orange hover:bg-orange-500 text-white text-[13px] font-semibold transition-all duration-200 hover:scale-105">
+          Free Consultation
+        </a>
+        <button id="menu-btn" class="lg:hidden w-9 h-9 flex flex-col justify-center items-center gap-[5px]" aria-label="Menu">
+          <span class="menu-bar block w-5 h-[1.5px] bg-h-body transition-all duration-300 origin-center"></span>
+          <span class="menu-bar block w-5 h-[1.5px] bg-h-body transition-all duration-300 origin-center"></span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-h-divider bg-white/97 backdrop-blur-xl">
+    <div class="max-w-screen-xl mx-auto px-5 py-6 flex flex-col gap-5">
+      <a href="#services" class="mobile-link text-h-body text-[16px] font-medium py-1">Services</a>
+      <a href="#clients"  class="mobile-link text-h-body text-[16px] font-medium py-1">Who We Serve</a>
+      <a href="#why-us"   class="mobile-link text-h-body text-[16px] font-medium py-1">Why Heliora</a>
+      <a href="#process"  class="mobile-link text-h-body text-[16px] font-medium py-1">Our Process</a>
+      <a href="#contact"  class="mobile-link text-h-body text-[16px] font-medium py-1">Contact</a>
+      <a href="#contact"  class="mt-2 py-3 text-center rounded-full bg-h-orange text-white font-semibold text-[15px]">Free Consultation</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section id="home" class="relative bg-white min-h-[100svh] overflow-hidden flex flex-col justify-center">
+
+  <!-- Subtle warm radial -->
+  <div class="hero-radial absolute inset-0 pointer-events-none"></div>
+
+  <div class="relative max-w-screen-xl mx-auto w-full px-5 lg:px-12 pt-24 pb-12 lg:pt-28 lg:pb-16">
+
+    <!-- ══ Two-column grid ══ -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-20 items-center">
+
+      <!-- ── LEFT: Text ── -->
+      <div class="flex flex-col justify-center">
+
+        <!-- Eyebrow pill -->
+        <div class="fade-up inline-flex self-start items-center gap-2.5 px-4 py-1.5 rounded-full bg-h-orangelt border border-orange-100 text-h-orange text-[11px] font-semibold tracking-[0.12em] uppercase mb-7">
+          <span class="w-1.5 h-1.5 rounded-full bg-h-orange flex-shrink-0 animate-pulse"></span>
+          Abuja, Nigeria &nbsp;·&nbsp; Serving West Africa
+        </div>
+
+        <!-- Headline -->
+        <h1 class="fade-up text-[46px] sm:text-[56px] xl:text-[72px] font-black leading-[0.92] tracking-[-0.04em] text-h-body mb-6" style="animation-delay:.1s">
+          Solar<br/>
+          engineering.<br/>
+          <span class="text-h-orange">Precisely</span><br/>
+          delivered.
+        </h1>
+
+        <p class="fade-up text-h-mid text-[16px] lg:text-[17px] leading-[1.7] mb-9 max-w-lg" style="animation-delay:.22s">
+          Heliora Consulting Limited specialises in the full engineering design of isolated and interconnected solar mini-grids for rural electrification — bankable, NERC-compliant, delivered across Nigeria and West Africa.
+        </p>
+
+        <!-- CTAs -->
+        <div class="fade-up flex flex-wrap items-center gap-4 mb-8" style="animation-delay:.32s">
+          <a href="#contact" class="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-h-orange hover:bg-orange-500 text-white font-bold text-[15px] transition-all duration-200 hover:scale-105 shadow-orange">
+            Request a Consultation
+            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#services" class="group inline-flex items-center gap-1.5 text-h-body font-semibold text-[15px] hover:text-h-orange transition-colors">
+            Explore Our Services
+            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <!-- Trust chips -->
+        <div class="fade-up flex flex-col gap-2" style="animation-delay:.42s">
+          <span class="inline-flex items-center gap-2 text-[12px] text-h-muted font-medium">
+            <svg class="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            NERC-Compliant Engineering Designs
+          </span>
+          <span class="inline-flex items-center gap-2 text-[12px] text-h-muted font-medium">
+            <svg class="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            Bankable Engineering Reports for DFIs &amp; Lenders
+          </span>
+          <span class="inline-flex items-center gap-2 text-[12px] text-h-muted font-medium">
+            <svg class="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            PVSyst &amp; HOMER Pro Energy Modelling
+          </span>
+        </div>
+
+      </div><!-- /LEFT -->
+
+      <!-- ── RIGHT: Image ── -->
+      <div class="fade-up relative" style="animation-delay:.2s">
+
+        <!-- Main image card -->
+        <div class="relative rounded-[24px] overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.16)]" style="aspect-ratio:4/5;">
+          <img
+            src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=900&q=90"
+            alt="Aerial view of a solar mini-grid serving a rural community"
+            class="w-full h-full object-cover"
+            loading="eager"
+          />
+          <!-- Bottom gradient for badge legibility -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+
+          <!-- Flagship badge — bottom of image -->
+          <div class="absolute bottom-4 left-4 right-4">
+            <div class="bg-white/95 backdrop-blur-md rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl">
+              <div class="w-9 h-9 rounded-xl bg-h-orange flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-h-body font-bold text-[12px] leading-snug truncate">Solar Mini-Grid Engineering Design</div>
+                <div class="text-h-muted text-[11px] mt-0.5">Isolated &amp; Interconnected · 50 kW – 1 MW+</div>
+              </div>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-bold flex-shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>Flagship
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating stat — top left, outside image -->
+        <div class="absolute -top-4 -left-4 bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-h-divider px-4 py-3 text-center z-10">
+          <div class="text-[28px] font-black text-h-navy leading-none">85M</div>
+          <div class="text-h-muted text-[10px] leading-tight mt-0.5">Nigerians<br/>off-grid</div>
+        </div>
+
+        <!-- Floating stat — top right, outside image -->
+        <div class="absolute -top-4 -right-4 bg-h-orange rounded-2xl shadow-[0_8px_32px_rgba(244,124,32,0.35)] px-4 py-3 text-center z-10">
+          <div class="text-[24px] font-black text-white leading-none">$9.2B</div>
+          <div class="text-orange-100 text-[10px] leading-tight mt-0.5">Market<br/>opportunity</div>
+        </div>
+
+        <!-- Decorative corner accents -->
+        <div class="absolute -bottom-6 -right-6 w-32 h-32 rounded-3xl bg-h-orangelt border border-orange-100 -z-10"></div>
+        <div class="absolute -bottom-3 -left-3 w-20 h-20 rounded-2xl bg-h-navylt border border-blue-100 -z-10"></div>
+
+      </div><!-- /RIGHT -->
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ MARKET STATS ═══════════════════════ -->
+<section class="bg-h-offwhite border-y border-h-divider">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12 py-14">
+    <p class="text-center text-h-muted text-[11px] tracking-[0.2em] uppercase mb-10 reveal font-medium">The Opportunity We're Built For</p>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+      <div class="reveal">
+        <div class="text-[44px] lg:text-[50px] font-black text-h-body leading-none tracking-[-0.04em] mb-2">85M</div>
+        <div class="text-h-muted text-[13px] leading-snug">Nigerians without reliable electricity</div>
+      </div>
+      <div class="reveal" style="animation-delay:.08s">
+        <div class="text-[44px] lg:text-[50px] font-black text-h-orange leading-none tracking-[-0.04em] mb-2">$9.2B</div>
+        <div class="text-h-muted text-[13px] leading-snug">Mini-grid investment opportunity</div>
+      </div>
+      <div class="reveal" style="animation-delay:.16s">
+        <div class="text-[44px] lg:text-[50px] font-black text-h-body leading-none tracking-[-0.04em] mb-2">35%</div>
+        <div class="text-h-muted text-[13px] leading-snug">Annual C&amp;I solar market growth</div>
+      </div>
+      <div class="reveal" style="animation-delay:.24s">
+        <div class="text-[44px] lg:text-[50px] font-black text-h-orange leading-none tracking-[-0.04em] mb-2">$20B+</div>
+        <div class="text-h-muted text-[13px] leading-snug">ECOWAS regional solar opportunity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ SERVICES ═══════════════════════ -->
+<section id="services" class="bg-white py-32 lg:py-44">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12">
+
+    <div class="max-w-2xl mb-20 reveal">
+      <p class="section-eyebrow text-h-orange">Our Services</p>
+      <h2 class="section-heading text-h-body">
+        Technical expertise.<br/>At every project stage.
+      </h2>
+      <p class="section-sub text-h-mid">
+        From independent engineering oversight to detailed feasibility studies — we bring rigorous, senior-led technical consulting to every solar and rural electrification engagement.
+      </p>
+    </div>
+
+    <!-- Bento grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <!-- 1. Solar Mini-Grid Engineering Design — FEATURED, full width -->
+      <div class="lg:col-span-3 group relative bg-h-navy rounded-3xl p-10 lg:p-14 overflow-hidden reveal hover:shadow-navy transition-all duration-500">
+        <!-- Decorative arcs -->
+        <div class="absolute top-0 right-0 w-[380px] h-[380px] rounded-full bg-white/5 translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+        <div class="absolute bottom-0 right-32 w-[200px] h-[200px] rounded-full bg-h-orange/10 pointer-events-none"></div>
+
+        <div class="relative grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-white text-[11px] font-semibold tracking-[0.15em] uppercase mb-6">
+              ⭐ &nbsp;Flagship Service
+            </div>
+            <p class="text-white/60 text-[11px] font-semibold tracking-[0.18em] uppercase mb-4">01 — Solar Mini-Grid Engineering Design</p>
+            <h3 class="text-[30px] lg:text-[38px] font-black leading-[1.1] tracking-[-0.03em] text-white mb-5">
+              Isolated &amp; interconnected<br/>mini-grids. Engineered right.
+            </h3>
+            <p class="text-white/75 text-[15px] leading-relaxed">
+              Heliora's core expertise is the full engineering design of solar mini-grids for rural electrification — both isolated off-grid systems and grid-interconnected configurations. We deliver bankable, NERC-compliant designs from concept through construction-ready drawings.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="oe-card">
+              <div class="text-h-orange font-bold text-[13px] mb-1.5">Isolated Mini-Grid Design</div>
+              <div class="text-white/55 text-[12px] leading-snug">Off-grid solar-battery systems engineered for unserved rural communities, 50kW–1MW</div>
+            </div>
+            <div class="oe-card">
+              <div class="text-h-orange font-bold text-[13px] mb-1.5">Grid-Interconnected Design</div>
+              <div class="text-white/55 text-[12px] leading-snug">Hybrid mini-grids designed for eventual NESI grid integration with protection coordination</div>
+            </div>
+            <div class="oe-card">
+              <div class="text-h-orange font-bold text-[13px] mb-1.5">System Sizing &amp; Modelling</div>
+              <div class="text-white/55 text-[12px] leading-snug">HOMER Pro &amp; PVSyst simulation, load forecasting, battery storage optimisation</div>
+            </div>
+            <div class="oe-card">
+              <div class="text-h-orange font-bold text-[13px] mb-1.5">Detailed Engineering Package</div>
+              <div class="text-white/55 text-[12px] leading-snug">Single-line diagrams, protection relay settings, civil drawings, bills of materials</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Owner's Engineer -->
+      <div class="service-card-light group reveal">
+        <div class="svc-icon-light bg-h-navylt">
+          <svg class="w-5 h-5 text-h-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <p class="svc-label-light text-h-navy">02 — Owner's Engineer Services</p>
+        <h3 class="svc-title-light">Your independent eyes<br/>on every project.</h3>
+        <p class="svc-desc-light">Heliora acts as the independent Owner's Engineer — protecting your interests during construction, commissioning, and operation. We verify that your EPC contractor delivers what was designed, on spec, on time, and to the agreed performance guarantees.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="tag-light">Construction Supervision</span>
+          <span class="tag-light">Technical Due Diligence</span>
+          <span class="tag-light">Commissioning</span>
+        </div>
+      </div>
+
+      <!-- 3. Feasibility Studies -->
+      <div class="service-card-light group reveal" style="animation-delay:.07s">
+        <div class="svc-icon-light bg-h-orangelt">
+          <svg class="w-5 h-5 text-h-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <p class="svc-label-light text-h-orange">03 — Feasibility Studies &amp; Energy Audits</p>
+        <h3 class="svc-title-light">Know before<br/>you commit capital.</h3>
+        <p class="svc-desc-light">Comprehensive technical and financial feasibility assessments — site evaluation, solar resource analysis, load profiling, system sizing, financial modelling (NPV, IRR, payback), and investment memoranda. For mini-grids (50kW–1MW) and C&amp;I solar.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="tag-light">Site Assessment</span>
+          <span class="tag-light">Financial Modelling</span>
+          <span class="tag-light">Load Profiling</span>
+        </div>
+      </div>
+
+      <!-- 4. ESIA -->
+      <div class="service-card-light group reveal" style="animation-delay:.14s">
+        <div class="svc-icon-light bg-green-50">
+          <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <p class="svc-label-light text-green-600">04 — Environmental &amp; Social Impact Assessment</p>
+        <h3 class="svc-title-light">IFC-compliant.<br/>Lender-ready.</h3>
+        <p class="svc-desc-light">Full ESIAs compliant with Nigeria's EIA Act and IFC Performance Standards. Environmental &amp; Social Management Plans, stakeholder engagement, gender inclusion assessments, and FMEnv permit support. Built to satisfy DFI and lender requirements.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="tag-light">IFC Performance Standards</span>
+          <span class="tag-light">FMEnv Permits</span>
+        </div>
+      </div>
+
+      <!-- 5. C&I Solar -->
+      <div class="service-card-light group reveal" style="animation-delay:.07s">
+        <div class="svc-icon-light bg-amber-50">
+          <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </div>
+        <p class="svc-label-light text-amber-600">05 — C&amp;I Solar Project Design &amp; Development</p>
+        <h3 class="svc-title-light">Large-scale solar for<br/>factories, telecoms &amp; estates.</h3>
+        <p class="svc-desc-light">Rooftop and ground-mount C&amp;I solar (200kW–2MW) — PVSyst performance modelling, grid integration studies, EPC procurement support, construction supervision, and performance acceptance testing.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="tag-light">PVSyst Modelling</span>
+          <span class="tag-light">Grid Integration</span>
+        </div>
+      </div>
+
+      <!-- 6. SHS Design -->
+      <div class="service-card-light group reveal" style="animation-delay:.14s">
+        <div class="svc-icon-light bg-purple-50">
+          <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <p class="svc-label-light text-purple-600">06 — Solar Home System Design</p>
+        <h3 class="svc-title-light">Technical design for<br/>residential &amp; PAYG solar.</h3>
+        <p class="svc-desc-light">Component selection, electrical wiring diagrams, bills of materials, installation guidelines, and QA specifications for solar home systems from 10W to 500W. Serving SHS distributors and PAYG solar operators.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="tag-light">10W – 500W Systems</span>
+          <span class="tag-light">PAYG Design</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ WHO WE SERVE ═══════════════════════ -->
+<section id="clients" class="bg-h-offwhite py-32 lg:py-44 border-t border-h-divider">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12">
+
+    <div class="text-center max-w-2xl mx-auto mb-20 reveal">
+      <p class="section-eyebrow text-h-orange mx-auto">Who We Serve</p>
+      <h2 class="section-heading text-h-body">Built for the builders<br/>of Nigeria's energy future.</h2>
+      <p class="section-sub text-h-mid mx-auto">We work alongside the organisations directly driving solar project development, construction, and funding across Nigeria and West Africa.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+      <!-- MDAs -->
+      <div class="client-card-light reveal">
+        <div class="client-icon bg-h-navylt">
+          <svg class="w-6 h-6 text-h-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="client-label text-h-navy">Ministries, Departments &amp; Agencies</div>
+          <h3 class="client-title">MDAs &amp; Government Bodies</h3>
+          <p class="client-desc">Federal and state ministries, the Rural Electrification Agency (REA), NERC, NNPC subsidiaries, and public institutions accessing electrification under the Nigerian Electrification Project (NEP) and related programmes.</p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="tag-light">REA / NEP</span>
+            <span class="tag-light">NERC</span>
+            <span class="tag-light">State Ministries</span>
+            <span class="tag-light">Public Institutions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- EPC Contractors -->
+      <div class="client-card-light reveal" style="animation-delay:.07s">
+        <div class="client-icon bg-h-orangelt">
+          <svg class="w-6 h-6 text-h-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="client-label text-h-orange">Engineering, Procurement &amp; Construction</div>
+          <h3 class="client-title">EPC Contractors</h3>
+          <p class="client-desc">Solar EPC firms needing independent technical validation, third-party quality assurance, or specialist sub-consulting support for feasibility, ESIA, and compliance on contracts they have won or are bidding.</p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="tag-light">Technical Validation</span>
+            <span class="tag-light">QA / QC</span>
+            <span class="tag-light">Sub-Consulting</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Developers / IPPs -->
+      <div class="client-card-light reveal" style="animation-delay:.14s">
+        <div class="client-icon bg-green-50">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="client-label text-green-600">Independent Power Producers &amp; Developers</div>
+          <h3 class="client-title">Project Developers</h3>
+          <p class="client-desc">Solar project developers and IPPs at any stage — from early feasibility to financial close and construction — who need rigorous technical advisory to de-risk projects and satisfy investor requirements.</p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="tag-light">IPPs</span>
+            <span class="tag-light">Mini-Grid Operators</span>
+            <span class="tag-light">Solar Developers</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- International Development Agencies -->
+      <div class="client-card-light reveal" style="animation-delay:.07s">
+        <div class="client-icon bg-blue-50">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="client-label text-blue-600">Multilateral &amp; Bilateral Agencies</div>
+          <h3 class="client-title">International Development Agencies</h3>
+          <p class="client-desc">World Bank, AfDB, USAID, GIZ, Power Africa, FCDO, and other agencies implementing energy access programmes in Nigeria and West Africa who require locally grounded, IFC-standard technical advisory.</p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="tag-light">World Bank</span>
+            <span class="tag-light">AfDB / USAID</span>
+            <span class="tag-light">GIZ / Power Africa</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- C&I Clients -->
+      <div class="client-card-light reveal" style="animation-delay:.14s">
+        <div class="client-icon bg-amber-50">
+          <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="client-label text-amber-600">Commercial &amp; Industrial</div>
+          <h3 class="client-title">C&amp;I Clients</h3>
+          <p class="client-desc">Manufacturing facilities, telecom companies, hotels, agro-processing plants, and commercial real estate developers who need expert technical consulting to design, procure, and commission their solar energy systems correctly.</p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="tag-light">Manufacturing</span>
+            <span class="tag-light">Telecoms</span>
+            <span class="tag-light">Hospitality</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Off-Grid Developers -->
+      <div class="client-card-light reveal" style="animation-delay:.21s">
+        <div class="client-icon bg-purple-50">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="client-label text-purple-600">Rural &amp; Off-Grid</div>
+          <h3 class="client-title">Off-Grid &amp; Rural Electrification Developers</h3>
+          <p class="client-desc">Mini-grid developers, solar home system distributors, and PAYG solar companies requiring technical design, NERC compliance support, and REA programme M&amp;E services.</p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="tag-light">Mini-Grid Developers</span>
+            <span class="tag-light">SHS Distributors</span>
+            <span class="tag-light">PAYG Solar</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ WHY HELIORA ═══════════════════════ -->
+<section id="why-us" class="bg-white py-32 lg:py-44 border-t border-h-divider">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12">
+    <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+
+      <!-- Left -->
+      <div class="reveal">
+        <p class="section-eyebrow text-h-orange">Why Heliora</p>
+        <h2 class="section-heading text-h-body">
+          Specialist focus.<br/>Local knowledge.<br/><span class="text-h-orange">No shortcuts.</span>
+        </h2>
+        <p class="text-h-mid text-[17px] leading-[1.7] mb-10">
+          Nigeria's solar sector demands more than generalist engineering. It requires hands-on familiarity with NERC mini-grid regulations, REA programme requirements, IFC Performance Standards, and the realities of project delivery in West Africa.
+        </p>
+        <div class="space-y-5">
+          <div class="diff-row-light reveal">
+            <div class="diff-check-light"><svg class="w-3 h-3 text-h-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            <div>
+              <div class="font-semibold text-h-body text-[15px]">Exclusive solar &amp; rural electrification specialisation</div>
+              <div class="text-h-muted text-[13px] mt-0.5">We don't dabble. Every consultant, every tool, every engagement is focused on solar energy.</div>
+            </div>
+          </div>
+          <div class="diff-row-light reveal" style="animation-delay:.06s">
+            <div class="diff-check-light"><svg class="w-3 h-3 text-h-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            <div>
+              <div class="font-semibold text-h-body text-[15px]">IFC Performance Standards compliant deliverables</div>
+              <div class="text-h-muted text-[13px] mt-0.5">Our reports and ESIAs satisfy international lender and DFI requirements out of the box.</div>
+            </div>
+          </div>
+          <div class="diff-row-light reveal" style="animation-delay:.1s">
+            <div class="diff-check-light"><svg class="w-3 h-3 text-h-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            <div>
+              <div class="font-semibold text-h-body text-[15px]">Senior-led engagements, every time</div>
+              <div class="text-h-muted text-[13px] mt-0.5">Senior consultants run your project — not juniors. You get the expertise you're paying for.</div>
+            </div>
+          </div>
+          <div class="diff-row-light reveal" style="animation-delay:.14s">
+            <div class="diff-check-light"><svg class="w-3 h-3 text-h-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            <div>
+              <div class="font-semibold text-h-body text-[15px]">20–30% below international consulting rates</div>
+              <div class="text-h-muted text-[13px] mt-0.5">World-class technical quality priced for the Nigerian market, not London or Washington.</div>
+            </div>
+          </div>
+          <div class="diff-row-light reveal" style="animation-delay:.18s">
+            <div class="diff-check-light"><svg class="w-3 h-3 text-h-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            <div>
+              <div class="font-semibold text-h-body text-[15px]">PVSyst, HOMER Pro, AutoCAD — industry tools</div>
+              <div class="text-h-muted text-[13px] mt-0.5">Software-validated, bankable engineering that holds up under lender and investor scrutiny.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: positioning + goal cards -->
+      <div class="space-y-4 reveal" style="animation-delay:.18s">
+
+        <!-- Positioning bar -->
+        <div class="bg-h-offwhite border border-h-divider rounded-3xl p-8">
+          <p class="text-h-muted text-[11px] font-semibold tracking-[0.16em] uppercase mb-7">Our Market Position</p>
+          <div class="space-y-6">
+            <div>
+              <div class="flex justify-between text-[12px] mb-2.5">
+                <span class="text-h-muted">Freelance Consultants</span>
+                <span class="text-h-muted">Low cost · limited scope</span>
+              </div>
+              <div class="h-1.5 rounded-full bg-h-divider overflow-hidden"><div class="h-full w-1/4 rounded-full bg-h-border"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[12px] mb-2.5">
+                <span class="text-h-orange font-semibold">Heliora Consulting</span>
+                <span class="text-h-orange font-semibold">Specialist quality · local pricing</span>
+              </div>
+              <div class="h-1.5 rounded-full bg-h-divider overflow-hidden"><div class="h-full w-[62%] rounded-full bg-gradient-to-r from-h-orange to-amber-400"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[12px] mb-2.5">
+                <span class="text-h-muted">International Firms</span>
+                <span class="text-h-muted">Premium price · slow mobilisation</span>
+              </div>
+              <div class="h-1.5 rounded-full bg-h-divider overflow-hidden"><div class="h-full w-full rounded-full bg-h-border"></div></div>
+            </div>
+          </div>
+          <p class="text-h-muted text-[13px] mt-7 leading-relaxed border-t border-h-divider pt-6">
+            More specialised than local generalists. More affordable and agile than international firms. More rigorous than freelancers.
+          </p>
+        </div>
+
+        <!-- Goal cards -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="goal-card">
+            <div class="text-[30px] font-black text-h-orange leading-none mb-1.5 tracking-[-0.03em]">10MW</div>
+            <div class="text-h-muted text-[12px] leading-snug">Solar capacity target by 2029</div>
+          </div>
+          <div class="goal-card">
+            <div class="text-[30px] font-black text-h-body leading-none mb-1.5 tracking-[-0.03em]">5</div>
+            <div class="text-h-muted text-[12px] leading-snug">West African markets by Year 5</div>
+          </div>
+          <div class="goal-card">
+            <div class="text-[30px] font-black text-h-body leading-none mb-1.5 tracking-[-0.03em]">70%</div>
+            <div class="text-h-muted text-[12px] leading-snug">Target client retention rate</div>
+          </div>
+          <div class="goal-card">
+            <div class="text-[30px] font-black text-h-orange leading-none mb-1.5 tracking-[-0.03em]">15–20</div>
+            <div class="text-h-muted text-[12px] leading-snug">Specialist consultants by Year 5</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ PROCESS ═══════════════════════ -->
+<section id="process" class="bg-h-offwhite py-32 lg:py-44 border-t border-h-divider">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12">
+
+    <div class="text-center max-w-xl mx-auto mb-20 reveal">
+      <p class="section-eyebrow text-h-orange mx-auto">How We Work</p>
+      <h2 class="section-heading text-h-body">Clear process.<br/>No surprises.</h2>
+      <p class="section-sub text-h-mid mx-auto">Structured around how solar projects actually move in Nigeria — with transparent milestones and direct access to senior consultants throughout.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <div class="process-card-light reveal">
+        <div class="process-num">01</div>
+        <h3 class="text-[18px] font-bold text-h-body mt-4 mb-2.5">Inquiry &amp; Discovery</h3>
+        <p class="text-h-muted text-[14px] leading-relaxed">Initial consultation, needs assessment, and scoping. We qualify every engagement to ensure it fits — and tell you clearly when it doesn't.</p>
+      </div>
+
+      <div class="process-card-light reveal" style="animation-delay:.08s">
+        <div class="process-num">02</div>
+        <h3 class="text-[18px] font-bold text-h-body mt-4 mb-2.5">Proposal &amp; Agreement</h3>
+        <p class="text-h-muted text-[14px] leading-relaxed">A fixed-scope proposal with defined deliverables, timelines, team composition, and transparent fees — within 1–2 weeks. 30–40% advance to mobilise.</p>
+      </div>
+
+      <div class="process-card-light reveal" style="animation-delay:.16s">
+        <div class="process-num">03</div>
+        <h3 class="text-[18px] font-bold text-h-body mt-4 mb-2.5">Technical Execution</h3>
+        <p class="text-h-muted text-[14px] leading-relaxed">Senior consultant-led field work, analysis, and reporting with fortnightly progress updates. Full internal QA review before any deliverable leaves our desk.</p>
+      </div>
+
+      <div class="process-card-light process-card-featured reveal" style="animation-delay:.24s">
+        <div class="process-num text-h-orange/25">04</div>
+        <h3 class="text-[18px] font-bold text-h-body mt-4 mb-2.5">Delivery &amp; Support</h3>
+        <p class="text-h-muted text-[14px] leading-relaxed">Final deliverable presentation, Technical Director sign-off, and post-delivery support through lender reviews and regulatory approvals. We stay engaged until you're done.</p>
+      </div>
+
+    </div>
+
+    <!-- Process callouts -->
+    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center reveal" style="animation-delay:.28s">
+      <div class="process-pill">
+        <svg class="w-4 h-4 text-h-orange flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Average sales cycle: <strong class="text-h-body ml-1">6–10 weeks</strong>
+      </div>
+      <div class="process-pill">
+        <svg class="w-4 h-4 text-h-orange flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        30–40% advance · Balance on final delivery
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ CTA BAND ═══════════════════════ -->
+<section class="bg-h-navy py-32 lg:py-40 relative overflow-hidden">
+  <div class="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-white/4 translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+  <div class="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-h-orange/8 -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+  <div class="relative z-10 text-center max-w-3xl mx-auto px-5 reveal">
+    <p class="text-white/50 text-[11px] font-semibold tracking-[0.2em] uppercase mb-6">Get Started</p>
+    <h2 class="text-[48px] sm:text-[60px] lg:text-[72px] font-black leading-[0.95] tracking-[-0.04em] text-white mb-7">
+      Your project deserves<br/>a specialist partner.
+    </h2>
+    <p class="text-white/65 text-[18px] leading-[1.65] mb-12 max-w-xl mx-auto">
+      Whether you're an MDA or developer commissioning mini-grid engineering design, an EPC contractor needing independent Owner's Engineer oversight, or an agency requiring feasibility and ESIA work — we'd like to hear from you.
+    </p>
+    <a href="#contact" class="inline-flex items-center gap-2.5 px-10 py-5 rounded-full bg-h-orange hover:bg-orange-400 text-white font-bold text-[17px] transition-all duration-200 hover:scale-105">
+      Start the Conversation
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ CONTACT ═══════════════════════ -->
+<section id="contact" class="bg-white py-32 lg:py-44 border-t border-h-divider">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12">
+    <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+
+      <!-- Left -->
+      <div class="reveal">
+        <p class="section-eyebrow text-h-orange">Get In Touch</p>
+        <h2 class="section-heading text-h-body">
+          Talk to a solar<br/>engineer today.
+        </h2>
+        <p class="text-h-mid text-[17px] leading-[1.7] mb-12">
+          Share your project details and a senior Heliora consultant will respond within 24 hours. No sales pitch — a direct, honest conversation about your technical challenge.
+        </p>
+
+        <div class="space-y-5 mb-12">
+          <a href="mailto:info@helioraconsulting.com" class="contact-row group">
+            <div class="contact-ico group-hover:border-h-orange/50 transition-colors">
+              <svg class="w-[18px] h-[18px] text-h-muted group-hover:text-h-orange transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <span class="text-h-body text-[15px] group-hover:text-h-orange transition-colors">info@helioraconsulting.com</span>
+          </a>
+          <div class="contact-row">
+            <div class="contact-ico">
+              <svg class="w-[18px] h-[18px] text-h-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <span class="text-h-mid text-[15px]">Abuja, FCT, Nigeria &nbsp;·&nbsp; Serving West Africa</span>
+          </div>
+          <div class="contact-row">
+            <div class="contact-ico">
+              <svg class="w-[18px] h-[18px] text-h-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <span class="text-h-mid text-[15px]">Response within 24 hours</span>
+          </div>
+        </div>
+
+        <div class="pt-8 border-t border-h-divider">
+          <p class="text-h-muted text-[11px] font-semibold tracking-[0.18em] uppercase mb-5">Regulatory &amp; Industry Engagement</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="assoc-pill-light">NERC</span>
+            <span class="assoc-pill-light">REA / NEP</span>
+            <span class="assoc-pill-light">REAN</span>
+            <span class="assoc-pill-light">IFC PS</span>
+            <span class="assoc-pill-light">FMEnv</span>
+            <span class="assoc-pill-light">World Bank</span>
+            <span class="assoc-pill-light">AfDB</span>
+            <span class="assoc-pill-light">Power Africa</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="reveal" style="animation-delay:.14s">
+        <div class="bg-h-offwhite border border-h-divider rounded-3xl p-8 lg:p-10">
+
+          <div id="form-success" class="hidden text-center py-14">
+            <div class="w-16 h-16 rounded-full bg-h-orangelt border border-orange-200 flex items-center justify-center mx-auto mb-6">
+              <svg class="w-7 h-7 text-h-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h3 class="text-[22px] font-bold text-h-body mb-3">We've received your enquiry.</h3>
+            <p class="text-h-mid text-[15px] leading-relaxed">A senior Heliora consultant will reach out within 24 hours. Check your email for confirmation.</p>
+          </div>
+
+          <form id="lead-form" action="submit-lead.php" method="POST" novalidate>
+            <input type="hidden" name="source"       value="website_contact_form" />
+            <input type="hidden" name="page_url"     id="f_page_url"     />
+            <input type="hidden" name="utm_source"   id="f_utm_source"   />
+            <input type="hidden" name="utm_medium"   id="f_utm_medium"   />
+            <input type="hidden" name="utm_campaign" id="f_utm_campaign" />
+            <input type="text"   name="website" style="display:none" tabindex="-1" autocomplete="off" />
+
+            <h3 class="text-[20px] font-bold text-h-body mb-1">Request a Free Consultation</h3>
+            <p class="text-h-muted text-[13px] mb-8">No commitment. A straight conversation about your project.</p>
+
+            <div class="grid sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="form-label-light">First Name *</label>
+                <input type="text" name="first_name" required placeholder="Emeka" class="form-input-light" />
+              </div>
+              <div>
+                <label class="form-label-light">Last Name *</label>
+                <input type="text" name="last_name" required placeholder="Adeyemi" class="form-input-light" />
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label-light">Work Email *</label>
+              <input type="email" name="email" required placeholder="emeka@company.com" class="form-input-light" />
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="form-label-light">Phone / WhatsApp</label>
+                <input type="tel" name="phone" placeholder="+234 801 234 5678" class="form-input-light" />
+              </div>
+              <div>
+                <label class="form-label-light">Organisation</label>
+                <input type="text" name="company" placeholder="Company name" class="form-input-light" />
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label-light">Service Required *</label>
+              <select name="service" required class="form-input-light">
+                <option value="" disabled selected>Select a service…</option>
+                <option value="minigrid_design">Solar Mini-Grid Engineering Design (Isolated / Interconnected)</option>
+                <option value="owners_engineer">Owner's Engineer Services</option>
+                <option value="feasibility_energy_audit">Feasibility Study &amp; Energy Audit</option>
+                <option value="esia">Environmental &amp; Social Impact Assessment (ESIA)</option>
+                <option value="ci_solar">C&amp;I Solar Project Design &amp; Development</option>
+                <option value="shs_design">Solar Home System Design</option>
+                <option value="monitoring_compliance">Project Monitoring &amp; Compliance</option>
+                <option value="multiple">Multiple Services / Not Sure</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label-light">Client Type</label>
+              <select name="client_type" class="form-input-light">
+                <option value="" disabled selected>Best describes you…</option>
+                <option value="mda">Ministry, Department &amp; Agency (MDA)</option>
+                <option value="epc_contractor">EPC Contractor</option>
+                <option value="project_developer">Project Developer / IPP</option>
+                <option value="development_agency">International Development Agency</option>
+                <option value="ci_client">Commercial &amp; Industrial Client</option>
+                <option value="off_grid_developer">Off-Grid / Rural Electrification Developer</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label-light">Approximate Project Scale</label>
+              <select name="project_scale" class="form-input-light">
+                <option value="" disabled selected>Select scale…</option>
+                <option value="under_50kw">Under 50kW (Solar Home Systems)</option>
+                <option value="50kw_500kw">50kW – 500kW (Mini-Grid / Small C&amp;I)</option>
+                <option value="500kw_2mw">500kW – 2MW (Large C&amp;I / Mini-Grid)</option>
+                <option value="above_2mw">Above 2MW</option>
+                <option value="undecided">Not yet determined</option>
+              </select>
+            </div>
+
+            <div class="mb-6">
+              <label class="form-label-light">Tell us about your project *</label>
+              <textarea name="message" required rows="4" placeholder="Project location, technology, current stage, and what you need from us…" class="form-input-light resize-none"></textarea>
+            </div>
+
+            <div id="form-error" class="hidden mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-red-600 text-[13px]"></div>
+
+            <button type="submit" id="submit-btn" class="w-full flex items-center justify-center gap-2 py-4 rounded-full bg-h-orange hover:bg-orange-500 text-white font-bold text-[16px] transition-all duration-200 hover:scale-[1.02]">
+              <span id="btn-text">Send My Request</span>
+              <svg id="btn-arrow" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+              <svg id="btn-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            </button>
+            <p class="text-h-muted text-[11px] text-center mt-4">Your information is never shared or sold.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer class="bg-h-offwhite border-t border-h-divider pt-20 pb-10">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12">
+    <div class="grid grid-cols-2 md:grid-cols-12 gap-10 mb-16">
+
+      <div class="col-span-2 md:col-span-5">
+        <a href="#home" class="inline-flex items-center gap-3 mb-6">
+          <img src="assets/images/logo.png" alt="Heliora Consulting Limited" class="h-9 w-auto" onerror="this.style.display='none';" />
+          <div>
+            <div class="text-h-body font-black text-[14px] tracking-[0.06em]">HELIORA</div>
+            <div class="text-h-orange text-[8px] tracking-[0.2em] uppercase font-semibold">Consulting Limited</div>
+          </div>
+        </a>
+        <p class="text-h-muted text-[13px] leading-relaxed max-w-xs mb-6">Nigeria's specialist solar engineering consultancy. Accelerating West Africa's energy transition through technical excellence and local expertise.</p>
+        <p class="text-h-muted text-[12px]">Abuja, FCT, Nigeria</p>
+        <div class="flex gap-3 mt-5">
+          <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-btn-light">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="X / Twitter" class="social-btn-light">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.26 5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-span-1 md:col-span-3">
+        <h4 class="footer-heading">Services</h4>
+        <ul class="space-y-3 text-[13px]">
+          <li><a href="#services" class="text-h-muted hover:text-h-orange transition-colors">Mini-Grid Engineering Design</a></li>
+          <li><a href="#services" class="text-h-muted hover:text-h-orange transition-colors">Owner's Engineer</a></li>
+          <li><a href="#services" class="text-h-muted hover:text-h-orange transition-colors">Feasibility &amp; Energy Audit</a></li>
+          <li><a href="#services" class="text-h-muted hover:text-h-orange transition-colors">ESIA</a></li>
+          <li><a href="#services" class="text-h-muted hover:text-h-orange transition-colors">C&amp;I Solar Consulting</a></li>
+          <li><a href="#services" class="text-h-muted hover:text-h-orange transition-colors">SHS Design</a></li>
+        </ul>
+      </div>
+
+      <div class="col-span-1 md:col-span-2">
+        <h4 class="footer-heading">Company</h4>
+        <ul class="space-y-3 text-[13px]">
+          <li><a href="#clients" class="text-h-muted hover:text-h-orange transition-colors">Who We Serve</a></li>
+          <li><a href="#why-us"  class="text-h-muted hover:text-h-orange transition-colors">Why Heliora</a></li>
+          <li><a href="#process" class="text-h-muted hover:text-h-orange transition-colors">Our Process</a></li>
+          <li><a href="#contact" class="text-h-muted hover:text-h-orange transition-colors">Contact Us</a></li>
+          <li><a href="admin/"   class="text-h-border hover:text-h-muted text-[11px] transition-colors mt-2 block">Admin ↗</a></li>
+        </ul>
+      </div>
+
+      <div class="col-span-2 md:col-span-2">
+        <h4 class="footer-heading">Contact</h4>
+        <ul class="space-y-3 text-[13px]">
+          <li><a href="mailto:info@helioraconsulting.com" class="text-h-muted hover:text-h-orange transition-colors break-all">info@helioraconsulting.com</a></li>
+          <li class="text-h-muted">Abuja, FCT, Nigeria</li>
+          <li class="pt-1"><a href="#contact" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-h-orange/10 border border-h-orange/20 text-h-orange text-[12px] font-semibold hover:bg-h-orange/20 transition-colors">Free Consultation →</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="pt-8 border-t border-h-divider flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p class="text-h-muted text-[12px]">&copy; 2025 Heliora Consulting Limited. All rights reserved. Abuja, Nigeria.</p>
+      <div class="flex gap-6 text-[12px]">
+        <a href="#" class="text-h-muted hover:text-h-body transition-colors">Privacy Policy</a>
+        <a href="#" class="text-h-muted hover:text-h-body transition-colors">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" role="alert" aria-live="polite"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

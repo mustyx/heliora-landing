@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php --version)",
+      "Bash(npm --version)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \":*)",
+      "Bash(where python:*)",
+      "Bash(where python3:*)",
+      "Bash(where py:*)",
+      "Bash(ls \"C:/Python\"*)",
+      "Read(//c/Program Files/**)",
+      "Bash(pandoc \"I:/My Drive/2026 Business Plan/Heliora''''s 2026 Business Plan.docx\" -o - --to plain)",
+      "Bash(mkdir -p \"C:/tmp/heliora_docx\" cp \"I:/My Drive/2026 Business Plan/Heliora''''s 2026 Business Plan.docx\" \"C:/tmp/heliora_docx/plan.docx\" cd \"C:/tmp/heliora_docx\")",
+      "Bash(unzip -o plan.docx -d unpacked/)"
+    ]
+  }
+}

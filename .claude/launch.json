@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Heliora Static Preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", ".", "--listen", "3000", "--no-clipboard"],
+      "port": 3000
+    }
+  ]
+}

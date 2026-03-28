@@ -1,0 +1,22 @@
+# Sensitive config — NEVER push these
+config/config.php
+config/database.php
+.env
+.env.*
+*.env
+
+# Logs
+*.log
+logs/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor folders
+.vscode/
+.idea/
+
+# Node (if ever used locally)
+node_modules/

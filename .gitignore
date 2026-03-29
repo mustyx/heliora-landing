@@ -1,9 +1,12 @@
 # Sensitive config — NEVER push these
 config/config.php
-config/database.php
 .env
 .env.*
 *.env
+
+# SSH deploy keys — NEVER push these
+heliora_deploy_key
+heliora_deploy_key.pub
 
 # Logs
 *.log

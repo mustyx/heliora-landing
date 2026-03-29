@@ -180,7 +180,7 @@ function buildAdminNotificationEmail(array $lead): string {
     $phone   = htmlspecialchars($lead['phone'] ?? 'Not provided');
     $company = htmlspecialchars($lead['company'] ?? 'Not provided');
     $service = formatService($lead['service']);
-    $budget  = formatBudget($lead['project_budget'] ?? '');
+    $scale   = formatScale($lead['project_scale'] ?? '');
     $message = nl2br(htmlspecialchars($lead['message']));
     $utm     = htmlspecialchars(
                  implode(' / ', array_filter([
@@ -214,8 +214,8 @@ function buildAdminNotificationEmail(array $lead): string {
         <tr><td style="padding:10px 0;border-bottom:1px solid #333;color:#999;font-size:13px;">Email</td><td style="padding:10px 0;border-bottom:1px solid #333;"><a href="mailto:{$email}" style="color:#d4a827;font-size:14px;">{$email}</a></td></tr>
         <tr><td style="padding:10px 0;border-bottom:1px solid #333;color:#999;font-size:13px;">Phone</td><td style="padding:10px 0;border-bottom:1px solid #333;color:#fff;font-size:14px;">{$phone}</td></tr>
         <tr><td style="padding:10px 0;border-bottom:1px solid #333;color:#999;font-size:13px;">Company</td><td style="padding:10px 0;border-bottom:1px solid #333;color:#fff;font-size:14px;">{$company}</td></tr>
-        <tr><td style="padding:10px 0;border-bottom:1px solid #333;color:#999;font-size:13px;">Service</td><td style="padding:10px 0;border-bottom:1px solid #333;color:#d4a827;font-size:14px;font-weight:600;">{$service}</td></tr>
-        <tr><td style="padding:10px 0;border-bottom:1px solid #333;color:#999;font-size:13px;">Budget</td><td style="padding:10px 0;border-bottom:1px solid #333;color:#fff;font-size:14px;">{$budget}</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #333;color:#999;font-size:13px;">Service</td><td style="padding:10px 0;border-bottom:1px solid #333;color:#f47c20;font-size:14px;font-weight:600;">{$service}</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #333;color:#999;font-size:13px;">Project Scale</td><td style="padding:10px 0;border-bottom:1px solid #333;color:#fff;font-size:14px;">{$scale}</td></tr>
         <tr><td style="padding:10px 0;border-bottom:1px solid #333;color:#999;font-size:13px;">Source</td><td style="padding:10px 0;border-bottom:1px solid #333;color:#fff;font-size:13px;">{$utm}</td></tr>
         <tr>
           <td style="padding:16px 0 0;color:#999;font-size:13px;vertical-align:top;">Message</td>
@@ -251,27 +251,30 @@ HTML;
  */
 function formatService(string $slug): string {
     $map = [
-        'structural_engineering'  => 'Structural Engineering',
-        'project_management'      => 'Project Management',
-        'technical_due_diligence' => 'Technical Due Diligence',
-        'energy_sustainability'   => 'Energy & Sustainability',
-        'mechanical_process'      => 'Mechanical & Process',
-        'other'                   => 'Other / Multiple Services',
+        'minigrid_design'          => 'Solar Mini-Grid Engineering Design',
+        'owners_engineer'          => "Owner's Engineer Services",
+        'feasibility_energy_audit' => 'Feasibility Study & Energy Audit',
+        'shs_design'               => 'Solar Home System (SHS) Design',
+        'esia'                     => 'ESIA & Environmental Compliance',
+        'monitoring_compliance'    => 'Monitoring & Regulatory Compliance',
+        'ci_solar'                 => 'C&I Solar Engineering',
+        'multiple'                 => 'Multiple Services',
+        'other'                    => 'Other / To Be Discussed',
     ];
     return $map[$slug] ?? ucwords(str_replace('_', ' ', $slug));
 }
 
 /**
- * Format budget slug to readable label
+ * Format project scale slug to readable label
  */
-function formatBudget(string $slug): string {
+function formatScale(string $slug): string {
     $map = [
-        'under_50k'  => 'Under $50K',
-        '50k_250k'   => '$50K – $250K',
-        '250k_1m'    => '$250K – $1M',
-        '1m_5m'      => '$1M – $5M',
-        'over_5m'    => 'Over $5M',
-        'undecided'  => 'Not yet determined',
+        'under_50kw'  => 'Under 50 kW',
+        '50kw_500kw'  => '50 kW – 500 kW',
+        '500kw_2mw'   => '500 kW – 2 MW',
+        'above_2mw'   => 'Above 2 MW',
+        'undecided'   => 'Not yet determined',
+        ''            => 'Not provided',
     ];
     return $map[$slug] ?? 'Not provided';
 }

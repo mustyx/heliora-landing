@@ -119,12 +119,12 @@ try {
     $pdo = getDB();
     $stmt = $pdo->prepare('
         INSERT INTO leads
-          (first_name, last_name, email, phone, company, service, project_budget,
-           message, source, page_url, utm_source, utm_medium, utm_campaign,
+          (first_name, last_name, email, phone, company, service, project_scale,
+           client_type, message, source, page_url, utm_source, utm_medium, utm_campaign,
            ip_address, user_agent)
         VALUES
-          (:first_name, :last_name, :email, :phone, :company, :service, :project_budget,
-           :message, :source, :page_url, :utm_source, :utm_medium, :utm_campaign,
+          (:first_name, :last_name, :email, :phone, :company, :service, :project_scale,
+           :client_type, :message, :source, :page_url, :utm_source, :utm_medium, :utm_campaign,
            :ip_address, :user_agent)
     ');
     $stmt->execute($lead);

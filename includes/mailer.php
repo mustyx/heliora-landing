@@ -1,8 +1,8 @@
 <?php
 /* ════════════════════════════════════════════════════════
-   Heliora Consulting — Email Functions (native PHP mail)
-   Uses Namecheap Private Email SMTP via PHP mail().
-   For production, swap with PHPMailer for SMTP auth.
+   Heliora Consulting — Email Functions (raw SMTP)
+   Authenticates directly with Namecheap Private Email
+   via SMTP — no external libraries required.
    ════════════════════════════════════════════════════════ */
 
 require_once __DIR__ . '/../config/config.php';
@@ -34,27 +34,116 @@ function sendAdminNotification(array $lead): bool {
 }
 
 /**
- * Core email sender using PHP mail() with proper headers
- * For reliable delivery on Namecheap, configure cPanel Email Routing
+ * Core email sender — raw SMTP with STARTTLS + AUTH LOGIN
+ * Works with Namecheap Private Email (mail.helioraconsulting.com:587)
  */
 function sendEmail(string $to, string $toName, string $subject, string $htmlBody): bool {
+    $host     = SMTP_HOST;
+    $port     = (int) SMTP_PORT;
+    $user     = SMTP_USER;
+    $pass     = SMTP_PASS;
     $from     = SMTP_FROM;
     $fromName = SMTP_NAME;
+    $ehlo     = 'helioraconsulting.com';
 
-    $headers  = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: =?UTF-8?B?" . base64_encode($fromName) . "?= <{$from}>\r\n";
-    $headers .= "Reply-To: {$from}\r\n";
-    $headers .= "X-Mailer: Heliora-Mailer/1.0\r\n";
-    $headers .= "X-Priority: 1\r\n";
+    try {
+        // ── Connect ───────────────────────────────────────────
+        $prefix  = ($port === 465) ? 'ssl://' : '';
+        $socket  = @fsockopen($prefix . $host, $port, $errno, $errstr, 15);
+        if (!$socket) {
+            error_log("SMTP connect failed [{$host}:{$port}]: {$errstr} ({$errno})");
+            return false;
+        }
+        stream_set_timeout($socket, 15);
 
-    $encodedTo = "=?UTF-8?B?" . base64_encode($toName) . "?= <{$to}>";
-    $result = @mail($encodedTo, '=?UTF-8?B?' . base64_encode($subject) . '?=', $htmlBody, $headers);
+        $read = smtpRead($socket);
+        if (!smtpOk($read, '220')) { fclose($socket); return false; }
 
-    if (!$result) {
-        error_log("Mail failed to: {$to} | Subject: {$subject}");
+        // ── EHLO ──────────────────────────────────────────────
+        smtpSend($socket, "EHLO {$ehlo}");
+        smtpReadAll($socket); // consume multi-line EHLO
+
+        // ── STARTTLS (port 587) ────────────────────────────────
+        if ($port === 587) {
+            smtpSend($socket, 'STARTTLS');
+            $r = smtpRead($socket);
+            if (!smtpOk($r, '220')) { fclose($socket); return false; }
+            if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT)) {
+                // fall back to any TLS
+                stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+            }
+            smtpSend($socket, "EHLO {$ehlo}");
+            smtpReadAll($socket);
+        }
+
+        // ── AUTH LOGIN ─────────────────────────────────────────
+        smtpSend($socket, 'AUTH LOGIN');
+        smtpRead($socket); // 334 Username
+        smtpSend($socket, base64_encode($user));
+        smtpRead($socket); // 334 Password
+        smtpSend($socket, base64_encode($pass));
+        $authResp = smtpRead($socket);
+        if (!smtpOk($authResp, '235')) {
+            error_log("SMTP auth failed: {$authResp}");
+            fclose($socket);
+            return false;
+        }
+
+        // ── Envelope ──────────────────────────────────────────
+        smtpSend($socket, "MAIL FROM:<{$from}>");
+        smtpRead($socket);
+        smtpSend($socket, "RCPT TO:<{$to}>");
+        $rcptResp = smtpRead($socket);
+        if (!smtpOk($rcptResp, '250') && !smtpOk($rcptResp, '251')) {
+            error_log("SMTP RCPT failed: {$rcptResp}");
+            fclose($socket);
+            return false;
+        }
+
+        // ── DATA ──────────────────────────────────────────────
+        smtpSend($socket, 'DATA');
+        smtpRead($socket); // 354
+
+        $enc = function(string $s): string {
+            return '=?UTF-8?B?' . base64_encode($s) . '?=';
+        };
+
+        $msg  = "From: {$enc($fromName)} <{$from}>\r\n";
+        $msg .= "To: {$enc($toName)} <{$to}>\r\n";
+        $msg .= "Subject: {$enc($subject)}\r\n";
+        $msg .= "MIME-Version: 1.0\r\n";
+        $msg .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $msg .= "Content-Transfer-Encoding: base64\r\n";
+        $msg .= "X-Mailer: Heliora-Mailer/2.0\r\n";
+        $msg .= "\r\n";
+        $msg .= chunk_split(base64_encode($htmlBody), 76, "\r\n");
+        $msg .= "\r\n.\r\n";
+
+        fputs($socket, $msg);
+        $dataResp = smtpRead($socket);
+
+        smtpSend($socket, 'QUIT');
+        fclose($socket);
+
+        $ok = smtpOk($dataResp, '250');
+        if (!$ok) error_log("SMTP DATA failed: {$dataResp}");
+        return $ok;
+
+    } catch (\Throwable $e) {
+        error_log('SMTP exception: ' . $e->getMessage());
+        return false;
     }
-    return (bool) $result;
+}
+
+/* ── SMTP helpers ──────────────────────────────────────── */
+function smtpSend($sock, string $cmd): void   { fputs($sock, $cmd . "\r\n"); }
+function smtpRead($sock): string              { return (string) fgets($sock, 512); }
+function smtpOk(string $resp, string $code): bool { return str_starts_with(trim($resp), $code); }
+function smtpReadAll($sock): void {
+    // Read until a line where the 4th char is a space (final EHLO line)
+    while (($line = fgets($sock, 512)) !== false) {
+        if (isset($line[3]) && $line[3] === ' ') break;
+    }
 }
 
 /**

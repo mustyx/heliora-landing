@@ -138,7 +138,7 @@ function sendEmail(string $to, string $toName, string $subject, string $htmlBody
 /* ── SMTP helpers ──────────────────────────────────────── */
 function smtpSend($sock, string $cmd): void   { fputs($sock, $cmd . "\r\n"); }
 function smtpRead($sock): string              { return (string) fgets($sock, 512); }
-function smtpOk(string $resp, string $code): bool { return str_starts_with(trim($resp), $code); }
+function smtpOk(string $resp, string $code): bool { return substr(trim($resp), 0, 3) === $code; }
 function smtpReadAll($sock): void {
     // Read until a line where the 4th char is a space (final EHLO line)
     while (($line = fgets($sock, 512)) !== false) {

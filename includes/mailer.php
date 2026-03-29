@@ -147,7 +147,7 @@ function smtpReadAll($sock): void {
 }
 
 /**
- * Auto-respond email HTML template
+ * Auto-respond email HTML template — light/orange brand
  */
 function buildAutoRespondEmail(string $name, string $service): string {
     $year = date('Y');
@@ -157,50 +157,62 @@ function buildAutoRespondEmail(string $name, string $service): string {
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>We received your request</title>
+<title>We received your request — Heliora Consulting</title>
 </head>
-<body style="margin:0;padding:0;background:#050d1a;font-family:'Inter',Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#050d1a;padding:40px 20px;">
+<body style="margin:0;padding:0;background:#f5f5f7;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f7;padding:40px 20px;">
 <tr><td align="center">
-<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#0a1628;border-radius:16px;overflow:hidden;border:1px solid #1a3a6e;">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e8e8ed;">
 
   <!-- Header -->
   <tr>
-    <td style="background:linear-gradient(135deg,#0a1628,#122850);padding:40px 48px;text-align:center;border-bottom:1px solid #1a3a6e;">
+    <td style="background:#1b2e6e;padding:36px 48px;text-align:center;">
       <table cellpadding="0" cellspacing="0" style="margin:0 auto;">
         <tr>
-          <td style="background:#d4a827;width:48px;height:48px;border-radius:10px;text-align:center;vertical-align:middle;font-family:Georgia,serif;font-size:22px;font-weight:bold;color:#050d1a;">H</td>
+          <td style="background:#f47c20;width:44px;height:44px;border-radius:10px;text-align:center;vertical-align:middle;font-family:Georgia,serif;font-size:20px;font-weight:bold;color:#ffffff;">H</td>
           <td style="padding-left:12px;text-align:left;">
-            <div style="color:#ffffff;font-size:18px;font-weight:600;letter-spacing:-0.3px;">Heliora</div>
-            <div style="color:#d4a827;font-size:10px;letter-spacing:3px;text-transform:uppercase;">Consulting</div>
+            <div style="color:#ffffff;font-size:17px;font-weight:700;letter-spacing:0.02em;">HELIORA</div>
+            <div style="color:#f47c20;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;margin-top:2px;">Consulting Limited</div>
           </td>
         </tr>
       </table>
-      <div style="margin-top:24px;width:40px;height:3px;background:#d4a827;margin-left:auto;margin-right:auto;border-radius:2px;"></div>
     </td>
   </tr>
 
+  <!-- Orange accent bar -->
+  <tr><td style="background:#f47c20;height:3px;font-size:0;line-height:0;">&nbsp;</td></tr>
+
   <!-- Body -->
   <tr>
-    <td style="padding:48px 48px 32px;">
-      <h1 style="color:#ffffff;font-size:28px;font-weight:700;margin:0 0 16px;line-height:1.3;">
-        Thank you, {$name}!
+    <td style="padding:48px 48px 40px;">
+      <h1 style="color:#1d1d1f;font-size:26px;font-weight:800;margin:0 0 16px;line-height:1.2;letter-spacing:-0.02em;">
+        Thank you, {$name}.
       </h1>
-      <p style="color:#9fb3c8;font-size:16px;line-height:1.7;margin:0 0 24px;">
-        We've received your consultation request regarding <strong style="color:#d4a827;">{$service}</strong>. A senior engineer from our team will review your project details and reach out within <strong style="color:#ffffff;">24 business hours</strong>.
+      <p style="color:#515154;font-size:16px;line-height:1.7;margin:0 0 12px;">
+        We have received your consultation request regarding <strong style="color:#f47c20;">{$service}</strong>.
       </p>
-      <p style="color:#9fb3c8;font-size:16px;line-height:1.7;margin:0 0 32px;">
-        In the meantime, here's what to expect from our process:
+      <p style="color:#515154;font-size:16px;line-height:1.7;margin:0 0 36px;">
+        A senior Heliora engineer will review your project details and contact you within <strong style="color:#1d1d1f;">24 business hours</strong>.
       </p>
 
-      <!-- Steps -->
+      <!-- Divider -->
+      <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:32px;">
+        <tr><td style="border-top:1px solid #e8e8ed;font-size:0;">&nbsp;</td></tr>
+      </table>
+
+      <!-- What to expect -->
+      <p style="color:#86868b;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin:0 0 20px;">What to Expect</p>
+
       <table cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td style="padding:0 0 16px;">
             <table cellpadding="0" cellspacing="0">
               <tr>
-                <td style="width:40px;height:40px;background:rgba(212,168,39,0.15);border-radius:8px;text-align:center;vertical-align:middle;color:#d4a827;font-weight:700;font-size:14px;">1</td>
-                <td style="padding-left:14px;color:#9fb3c8;font-size:14px;line-height:1.6;"><strong style="color:#fff;display:block;margin-bottom:2px;">Discovery Call</strong>A 30-minute call to understand your project and goals.</td>
+                <td style="width:36px;height:36px;background:#fff3e8;border-radius:8px;text-align:center;vertical-align:middle;color:#f47c20;font-weight:800;font-size:13px;border:1px solid rgba(244,124,32,0.2);">1</td>
+                <td style="padding-left:14px;">
+                  <div style="color:#1d1d1f;font-size:14px;font-weight:700;margin-bottom:2px;">Discovery Call</div>
+                  <div style="color:#86868b;font-size:13px;line-height:1.5;">A focused call to understand your project scope and objectives.</div>
+                </td>
               </tr>
             </table>
           </td>
@@ -209,45 +221,48 @@ function buildAutoRespondEmail(string $name, string $service): string {
           <td style="padding:0 0 16px;">
             <table cellpadding="0" cellspacing="0">
               <tr>
-                <td style="width:40px;height:40px;background:rgba(212,168,39,0.15);border-radius:8px;text-align:center;vertical-align:middle;color:#d4a827;font-weight:700;font-size:14px;">2</td>
-                <td style="padding-left:14px;color:#9fb3c8;font-size:14px;line-height:1.6;"><strong style="color:#fff;display:block;margin-bottom:2px;">Tailored Proposal</strong>A clear scope and fixed-fee proposal within 48 hours.</td>
+                <td style="width:36px;height:36px;background:#fff3e8;border-radius:8px;text-align:center;vertical-align:middle;color:#f47c20;font-weight:800;font-size:13px;border:1px solid rgba(244,124,32,0.2);">2</td>
+                <td style="padding-left:14px;">
+                  <div style="color:#1d1d1f;font-size:14px;font-weight:700;margin-bottom:2px;">Fixed-Scope Proposal</div>
+                  <div style="color:#86868b;font-size:13px;line-height:1.5;">A written proposal with defined deliverables, timeline, and transparent fees within 1–2 weeks.</div>
+                </td>
               </tr>
             </table>
           </td>
         </tr>
         <tr>
-          <td style="padding:0 0 0;">
+          <td>
             <table cellpadding="0" cellspacing="0">
               <tr>
-                <td style="width:40px;height:40px;background:rgba(212,168,39,0.15);border-radius:8px;text-align:center;vertical-align:middle;color:#d4a827;font-weight:700;font-size:14px;">3</td>
-                <td style="padding-left:14px;color:#9fb3c8;font-size:14px;line-height:1.6;"><strong style="color:#fff;display:block;margin-bottom:2px;">Engineering Excellence</strong>Delivery with full transparency and regular reporting.</td>
+                <td style="width:36px;height:36px;background:#fff3e8;border-radius:8px;text-align:center;vertical-align:middle;color:#f47c20;font-weight:800;font-size:13px;border:1px solid rgba(244,124,32,0.2);">3</td>
+                <td style="padding-left:14px;">
+                  <div style="color:#1d1d1f;font-size:14px;font-weight:700;margin-bottom:2px;">Technical Delivery</div>
+                  <div style="color:#86868b;font-size:13px;line-height:1.5;">Senior consultant-led execution with regular progress updates and full QA review.</div>
+                </td>
               </tr>
             </table>
           </td>
         </tr>
       </table>
 
-      <!-- CTA -->
-      <table cellpadding="0" cellspacing="0" style="margin:40px 0 32px;">
-        <tr>
-          <td style="background:#d4a827;border-radius:8px;">
-            <a href="https://helioraconsulting.com" style="display:inline-block;padding:14px 32px;color:#050d1a;font-weight:700;font-size:15px;text-decoration:none;">Visit Our Website →</a>
-          </td>
-        </tr>
+      <!-- Divider -->
+      <table cellpadding="0" cellspacing="0" width="100%" style="margin:36px 0 28px;">
+        <tr><td style="border-top:1px solid #e8e8ed;font-size:0;">&nbsp;</td></tr>
       </table>
 
-      <p style="color:#829ab1;font-size:13px;line-height:1.6;margin:0;">
-        Questions? Reply to this email or WhatsApp us at <a href="https://wa.me/1234567890" style="color:#d4a827;text-decoration:none;">+1 (234) 567-890</a>.
+      <p style="color:#86868b;font-size:13px;line-height:1.6;margin:0;">
+        For urgent matters, please reply directly to this email and we will respond as quickly as possible.
       </p>
     </td>
   </tr>
 
   <!-- Footer -->
   <tr>
-    <td style="background:#050d1a;padding:24px 48px;border-top:1px solid #1a3a6e;">
-      <p style="color:#4a6080;font-size:12px;margin:0;line-height:1.6;">
-        &copy; {$year} Heliora Consulting. All rights reserved.<br/>
-        You are receiving this because you submitted a request on helioraconsulting.com.
+    <td style="background:#f5f5f7;padding:24px 48px;border-top:1px solid #e8e8ed;">
+      <p style="color:#aeaeb2;font-size:11px;margin:0;line-height:1.7;">
+        &copy; {$year} Heliora Consulting Limited. All rights reserved.<br/>
+        Abuja, FCT, Nigeria &middot; helioraconsulting.com<br/>
+        You are receiving this email because you submitted a consultation request on our website.
       </p>
     </td>
   </tr>

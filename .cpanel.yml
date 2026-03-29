@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/prosuzec/helioraconsulting.com
+    - /bin/cp -R * $DEPLOYPATH

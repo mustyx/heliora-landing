@@ -44,3 +44,11 @@ Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
     ExpiresByType image/webp            "access plus 1 year"
     ExpiresByType font/woff2            "access plus 1 year"
 </IfModule>
+
+# ── Block the git directory ─────────────────────────────────
+# The repository lives inside the document root, so .git must not
+# be web-reachable: it would expose full source and history.
+RedirectMatch 404 ^/\.git
+<FilesMatch "^\.(git.*|env|htaccess|cpanel\.yml|gitignore|gitattributes)$">
+  Require all denied
+</FilesMatch>

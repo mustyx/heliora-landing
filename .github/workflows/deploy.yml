@@ -15,7 +15,14 @@ jobs:
       - name: Deploy via SFTP/SSH to Namecheap
         uses: burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzr --delete --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='*.md' --exclude='.env' --exclude='heliora_deploy_key*'
+          switches: >-
+            -avzr --delete
+            --exclude='.git' --exclude='.github' --exclude='node_modules'
+            --exclude='*.md' --exclude='.env' --exclude='heliora_deploy_key*'
+            --exclude='config/config.php'
+            --exclude='.claude' --exclude='.impeccable' --exclude='designs'
+            --exclude='*.bat' --exclude='*.sql' --exclude='*.jpeg'
+            --exclude='index-prerebrand-backup.html'
           path: ./
           remote_path: /home/prosuzec/helioraconsulting.com/
           remote_host: ${{ secrets.SSH_HOST }}

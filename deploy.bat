@@ -1,25 +1,14 @@
 @echo off
 echo.
-echo ==========================================
-echo   Heliora Landing Page — Deploy
-echo ==========================================
-echo.
-
-:: Accept optional commit message as argument, default to timestamp
-set MSG=%~1
-if "%MSG%"=="" set MSG=Update site %date% %time%
-
+echo  Deploying Heliora Landing Page...
+echo  ------------------------------------
 cd /d "%~dp0"
-
 git add .
-git commit -m "%MSG%"
+set /p msg="  Describe your changes: "
+git commit -m "%msg%"
 git push origin main
-
 echo.
-echo ==========================================
-echo   Pushed! GitHub Actions will auto-deploy
-echo   to Namecheap in ~30 seconds.
-echo   Check: https://github.com/YOUR-USERNAME/heliora-landing/actions
-echo ==========================================
+echo  Done! Now go to cPanel Git Version Control and click Update.
+echo  https://ap.www.namecheap.com
 echo.
 pause

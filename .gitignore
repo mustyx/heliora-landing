@@ -23,3 +23,11 @@ desktop.ini
 
 # Node (if ever used locally)
 node_modules/
+
+# Local preview / design scratch — never deploy
+start-preview.bat
+index-prerebrand-backup.html
+designs/
+.impeccable/
+.claude/
+*.jpeg

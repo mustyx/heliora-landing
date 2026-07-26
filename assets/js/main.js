@@ -66,6 +66,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 /* ── Smooth scroll with navbar offset ───────────────────── */
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
+    if (this.classList.contains('open-consultation-modal')) return;
     const target = document.querySelector(this.getAttribute('href'));
     if (!target) return;
     e.preventDefault();
@@ -196,3 +197,42 @@ document.querySelectorAll('a[href="#contact"]').forEach(btn => {
     }
   });
 });
+
+/* ── Consultation modal ──────────────────────────────────── */
+(function () {
+  const modal        = document.getElementById('consultation-modal');
+  const backdrop     = document.getElementById('modal-backdrop');
+  const closeBtn     = document.getElementById('modal-close');
+  const successClose = document.getElementById('modal-success-close');
+  if (!modal) return;
+
+  function openModal() {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    const first = modal.querySelector('input:not([type="hidden"]):not([style*="display:none"])');
+    if (first) setTimeout(() => first.focus(), 50);
+  }
+
+  function closeModal() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.open-consultation-modal').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'cta_click', { event_category: 'Lead', event_label: el.textContent.trim() });
+      }
+      openModal();
+    });
+  });
+
+  backdrop.addEventListener('click', closeModal);
+  closeBtn.addEventListener('click', closeModal);
+  if (successClose) successClose.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+  });
+}());

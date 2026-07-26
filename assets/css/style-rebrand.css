@@ -447,3 +447,7 @@ h1, h2 {
   display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
 }
 @media (prefers-reduced-motion: reduce) { .receive-card { transition: none; } }
+
+/* Icon sizing guard — independent of Tailwind's spacing scale */
+.receive-icon svg { width: 20px; height: 20px; flex: none; }
+.client-icon  svg { width: 24px; height: 24px; flex: none; }

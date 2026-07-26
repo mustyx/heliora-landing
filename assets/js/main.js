@@ -140,9 +140,12 @@ if (leadForm) {
             value: 1
           });
         }
+        // Show inline confirmation first, so the visitor sees success even
+        // if the redirect is blocked, then go to the thank-you page.
         leadForm.classList.add('hidden');
         formSuccess.classList.remove('hidden');
-        showToast('Request sent! Check your inbox for confirmation.');
+        showToast('Request sent! Redirecting…');
+        window.location.assign('thank-you.html');
       } else {
         showError(data.message || 'Something went wrong. Please email us directly.');
       }

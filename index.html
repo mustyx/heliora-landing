@@ -1370,16 +1370,19 @@
    Paste your IDs below to switch each channel on. While a value is empty
    that tag never loads, and if ALL are empty no consent banner is shown
    (nothing to consent to). Tags only fire AFTER the visitor accepts.
-     meta      Meta/Facebook Pixel ID   e.g. '1234567890123456'
-     linkedin  LinkedIn Partner ID      e.g. '1234567'
-     googleAds Google Ads conversion ID e.g. 'AW-123456789'
-     ga4       GA4 measurement ID       e.g. 'G-XXXXXXXXXX'
+     meta                 Meta/Facebook Pixel ID     e.g. '1234567890123456'
+     linkedin             LinkedIn Partner ID        e.g. '1234567'
+     linkedinConversionId LinkedIn Conversion ID     e.g. '9876543' (from Campaign Manager > Conversion Tracking)
+     googleAds            Google Ads conversion ID   e.g. 'AW-123456789'
+     googleAdsLabel       Google Ads conversion label e.g. 'AbC-D_efG-h12_34ijK'
+     ga4                  GA4 measurement ID         e.g. 'G-XXXXXXXXXX'
+     zohoSalesIQ          Zoho SalesIQ widget code   e.g. 'siqxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
    ─────────────────────────────────────────────────────────────────── */
-window.HELIORA_TRACKING = { meta:'', linkedin:'', googleAds:'', ga4:'' };
+window.HELIORA_TRACKING = { meta:'', linkedin:'', linkedinConversionId:'', googleAds:'', googleAdsLabel:'', ga4:'', zohoSalesIQ:'' };
 
 (function(){
   var T=window.HELIORA_TRACKING, KEY='heliora_consent';
-  var configured = !!(T.meta||T.linkedin||T.googleAds||T.ga4);
+  var configured = !!(T.meta||T.linkedin||T.googleAds||T.ga4||T.zohoSalesIQ);
 
   function loadTags(){
     if(T.ga4||T.googleAds){
@@ -1405,9 +1408,20 @@ window.HELIORA_TRACKING = { meta:'', linkedin:'', googleAds:'', ga4:'' };
       window._linkedin_partner_id=T.linkedin;
       window._linkedin_data_partner_ids=window._linkedin_data_partner_ids||[];
       window._linkedin_data_partner_ids.push(T.linkedin);
+      if(!window.lintrk){
+        window.lintrk=function(a,b){window.lintrk.q.push([a,b]);};
+        window.lintrk.q=[];
+      }
       var l=document.createElement('script'); l.async=true;
       l.src='https://snap.licdn.com/li.lms-analytics/insight.min.js';
       document.head.appendChild(l);
+    }
+    if(T.zohoSalesIQ){
+      window.$zoho=window.$zoho||{};
+      $zoho.salesiq=$zoho.salesiq||{ready:function(){}};
+      var z=document.createElement('script'); z.id='zsiqscript'; z.defer=true;
+      z.src='https://salesiq.zohopublic.com/widget?wc='+T.zohoSalesIQ;
+      document.body.appendChild(z);
     }
   }
 

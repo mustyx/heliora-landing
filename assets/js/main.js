@@ -133,12 +133,22 @@ if (leadForm) {
       const data = await res.json();
 
       if (data.success) {
+        const T = window.HELIORA_TRACKING || {};
         if (typeof gtag !== 'undefined') {
           gtag('event', 'generate_lead', {
             event_category: 'Lead',
             event_label: new FormData(leadForm).get('service'),
             value: 1
           });
+          if (T.googleAds && T.googleAdsLabel) {
+            gtag('event', 'conversion', { send_to: T.googleAds + '/' + T.googleAdsLabel });
+          }
+        }
+        if (typeof fbq !== 'undefined') {
+          fbq('track', 'Lead');
+        }
+        if (typeof lintrk !== 'undefined' && T.linkedinConversionId) {
+          lintrk('track', { conversion_id: T.linkedinConversionId });
         }
         // Show inline confirmation first, so the visitor sees success even
         // if the redirect is blocked, then go to the thank-you page.

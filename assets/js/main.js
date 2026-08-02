@@ -124,6 +124,8 @@ if (leadForm) {
     setLoading(true);
     hideError();
 
+    let redirecting = false;
+
     try {
       const res  = await fetch('submit-lead.php', {
         method: 'POST',
@@ -150,10 +152,10 @@ if (leadForm) {
         if (typeof lintrk !== 'undefined' && T.linkedinConversionId) {
           lintrk('track', { conversion_id: T.linkedinConversionId });
         }
-        // Show inline confirmation first, so the visitor sees success even
-        // if the redirect is blocked, then go to the thank-you page.
-        leadForm.classList.add('hidden');
-        formSuccess.classList.remove('hidden');
+        // Go straight to the thank-you page. Nothing is revealed on this page
+        // first — any inline panel would only flash for a few milliseconds
+        // before the navigation and read as a glitch.
+        redirecting = true;
         window.location.assign('thank-you.html');
       } else {
         showError(data.message || 'Something went wrong. Please email us directly.');
@@ -161,7 +163,9 @@ if (leadForm) {
     } catch {
       showError('Network error. Please check your connection and try again.');
     } finally {
-      setLoading(false);
+      // Keep the button in its "Sending…" state while the browser navigates,
+      // so nothing visibly resets in the moment before the page changes.
+      if (!redirecting) setLoading(false);
     }
   });
 

@@ -18,7 +18,8 @@ function sendAutoRespond(array $lead): bool {
     $subject = 'We received your request — Heliora Consulting';
     $body    = buildAutoRespondEmail($name, $service);
 
-    return sendEmail($to, $name, $subject, $body);
+    // CC'd so the mail trail with the lead starts here and Ladi can pick it up directly.
+    return sendEmail($to, $name, $subject, $body, 'ladi@helioraconsulting.com');
 }
 
 /**
@@ -37,7 +38,7 @@ function sendAdminNotification(array $lead): bool {
  * Core email sender — raw SMTP with STARTTLS + AUTH LOGIN
  * Works with Namecheap Private Email (mail.helioraconsulting.com:587)
  */
-function sendEmail(string $to, string $toName, string $subject, string $htmlBody): bool {
+function sendEmail(string $to, string $toName, string $subject, string $htmlBody, string $cc = ''): bool {
     $host     = SMTP_HOST;
     $port     = (int) SMTP_PORT;
     $user     = SMTP_USER;
@@ -100,6 +101,17 @@ function sendEmail(string $to, string $toName, string $subject, string $htmlBody
             return false;
         }
 
+        // CC recipient needs its own envelope RCPT TO — the Cc: header alone
+        // (added below) only makes it *visible*, it doesn't deliver anything.
+        if ($cc !== '') {
+            smtpSend($socket, "RCPT TO:<{$cc}>");
+            $ccResp = smtpRead($socket);
+            if (!smtpOk($ccResp, '250') && !smtpOk($ccResp, '251')) {
+                error_log("SMTP RCPT (cc) failed: {$ccResp}");
+                // Don't abort the whole send over a failed CC — the lead still gets their email.
+            }
+        }
+
         // ── DATA ──────────────────────────────────────────────
         smtpSend($socket, 'DATA');
         smtpRead($socket); // 354
@@ -110,6 +122,9 @@ function sendEmail(string $to, string $toName, string $subject, string $htmlBody
 
         $msg  = "From: {$enc($fromName)} <{$from}>\r\n";
         $msg .= "To: {$enc($toName)} <{$to}>\r\n";
+        if ($cc !== '') {
+            $msg .= "Cc: <{$cc}>\r\n";
+        }
         $msg .= "Subject: {$enc($subject)}\r\n";
         $msg .= "MIME-Version: 1.0\r\n";
         $msg .= "Content-Type: text/html; charset=UTF-8\r\n";

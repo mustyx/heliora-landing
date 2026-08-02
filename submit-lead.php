@@ -79,7 +79,7 @@ if (!$email) {
 // ── Honeypot anti-spam ───────────────────────────────────
 if (!empty($_POST['website'])) {  // hidden field bots fill
     // Silently succeed to not reveal the honeypot
-    respond(true, 'Thank you! We will be in touch shortly.');
+    respond(true, 'Thank you. We will be in touch shortly.');
 }
 
 // ── Build lead array ─────────────────────────────────────
@@ -156,4 +156,4 @@ try {
 }
 
 // ── Success response ──────────────────────────────────────
-respond(true, 'Thank you! We\'ll be in touch within 24 hours. Please check your email for confirmation.');
+respond(true, 'Thank you. We will be in touch within 24 hours. Please check your email for confirmation.');

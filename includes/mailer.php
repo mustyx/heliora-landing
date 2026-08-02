@@ -15,7 +15,7 @@ function sendAutoRespond(array $lead): bool {
     $name    = htmlspecialchars($lead['first_name'] . ' ' . $lead['last_name']);
     $service = formatService($lead['service']);
 
-    $subject = 'We received your request — Heliora Consulting';
+    $subject = 'We have received your request — Heliora Consulting';
     $body    = buildAutoRespondEmail($name, $service);
 
     // CC'd so the mail trail with the lead starts here and Ladi can pick it up directly.
@@ -27,7 +27,7 @@ function sendAutoRespond(array $lead): bool {
  */
 function sendAdminNotification(array $lead): bool {
     $to      = ADMIN_EMAIL;
-    $subject = '🔔 New Lead: ' . htmlspecialchars($lead['first_name'] . ' ' . $lead['last_name'])
+    $subject = 'New Lead: ' . htmlspecialchars($lead['first_name'] . ' ' . $lead['last_name'])
                . ' — ' . formatService($lead['service']);
     $body    = buildAdminNotificationEmail($lead);
 
@@ -172,7 +172,7 @@ function buildAutoRespondEmail(string $name, string $service): string {
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>We received your request — Heliora Consulting</title>
+<title>We have received your request — Heliora Consulting</title>
 </head>
 <body style="margin:0;padding:0;background:#f5f5f7;font-family:Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f7;padding:40px 20px;">
@@ -314,7 +314,7 @@ function buildAdminNotificationEmail(array $lead): string {
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#1a1a1a;border-radius:12px;overflow:hidden;border:1px solid #333;">
   <tr>
     <td style="background:#d4a827;padding:20px 32px;">
-      <h1 style="margin:0;color:#050d1a;font-size:20px;font-weight:700;">🔔 New Lead — Heliora Consulting</h1>
+      <h1 style="margin:0;color:#050d1a;font-size:20px;font-weight:700;">New Lead — Heliora Consulting</h1>
       <p style="margin:4px 0 0;color:#7a5a00;font-size:13px;">{$time}</p>
     </td>
   </tr>

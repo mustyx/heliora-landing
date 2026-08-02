@@ -52,7 +52,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style-rebrand.css?v=202607262032" />
+  <link rel="stylesheet" href="assets/css/style-rebrand.css?v=202608021600" />
 
 </head>
 
@@ -1181,7 +1181,7 @@
 
       <!-- Scrollable inner -->
       <div class="max-h-[90vh] overflow-y-auto rounded-3xl">
-        <div class="p-8 lg:p-10 pb-12 lg:pb-14">
+        <div class="p-6 lg:p-8 pb-8 lg:pb-9">
 
           <!-- Success state -->
           <div id="form-success" class="hidden text-center py-14">
@@ -1202,10 +1202,10 @@
             <input type="hidden" name="utm_campaign" id="f_utm_campaign" />
             <input type="text"   name="website" style="display:none" tabindex="-1" autocomplete="off" />
 
-            <h3 id="modal-form-title" class="text-[20px] font-bold text-h-body mb-1">Request a Free Consultation</h3>
-            <p class="text-h-muted text-[13px] mb-8">No commitment. A straight conversation about your project.</p>
+            <h3 id="modal-form-title" class="text-[20px] font-bold text-h-body mb-0.5">Request a Free Consultation</h3>
+            <p class="text-h-muted text-[13px] mb-4">No commitment. A straight conversation about your project.</p>
 
-            <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div class="grid sm:grid-cols-2 gap-3 mb-3">
               <div>
                 <label for="lf-first-name" class="form-label-light">First Name *</label>
                 <input id="lf-first-name" type="text" name="first_name" required aria-required="true" placeholder="Emeka" class="form-input-light" />
@@ -1216,12 +1216,12 @@
               </div>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
               <label for="lf-email" class="form-label-light">Work Email *</label>
               <input id="lf-email" type="email" name="email" required aria-required="true" placeholder="emeka@company.com" class="form-input-light" />
             </div>
 
-            <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div class="grid sm:grid-cols-2 gap-3 mb-3">
               <div>
                 <label for="lf-phone" class="form-label-light">Phone / WhatsApp</label>
                 <input id="lf-phone" type="tel" name="phone" placeholder="+234 801 234 5678" class="form-input-light" />
@@ -1232,7 +1232,7 @@
               </div>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
               <label for="lf-service" class="form-label-light">Service Required *</label>
               <select id="lf-service" name="service" required aria-required="true" class="form-input-light">
                 <option value="" disabled selected>Select a service…</option>
@@ -1247,7 +1247,7 @@
               </select>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
               <label for="lf-client-type" class="form-label-light">Client Type</label>
               <select id="lf-client-type" name="client_type" class="form-input-light">
                 <option value="" disabled selected>Best describes you…</option>
@@ -1261,7 +1261,7 @@
               </select>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
               <label for="lf-project-scale" class="form-label-light">Approximate Project Scale</label>
               <select id="lf-project-scale" name="project_scale" class="form-input-light">
                 <option value="" disabled selected>Select scale…</option>
@@ -1273,19 +1273,19 @@
               </select>
             </div>
 
-            <div class="mb-6">
+            <div class="mb-4">
               <label for="lf-message" class="form-label-light">Tell us about your project *</label>
-              <textarea id="lf-message" name="message" required aria-required="true" rows="4" placeholder="Project location, technology, current stage, and what you need from us…" class="form-input-light resize-none"></textarea>
+              <textarea id="lf-message" name="message" required aria-required="true" rows="3" placeholder="Project location, technology, current stage, and what you need from us…" class="form-input-light resize-none"></textarea>
             </div>
 
-            <div id="form-error" class="hidden mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-red-600 text-[13px]"></div>
+            <div id="form-error" class="hidden mb-3 px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-red-600 text-[13px]"></div>
 
-            <button type="submit" id="submit-btn" class="w-full flex items-center justify-center gap-2 py-4 rounded-full bg-h-orange hover:bg-h-orangeb text-h-body font-bold text-[16px] transition-all duration-200 hover:scale-[1.02]">
+            <button type="submit" id="submit-btn" class="w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-h-orange hover:bg-h-orangeb text-h-body font-bold text-[16px] transition-all duration-200 hover:scale-[1.02]">
               <span id="btn-text">Send My Request</span>
               <svg id="btn-arrow" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
               <svg id="btn-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
             </button>
-            <p class="text-h-muted text-[11px] text-center mt-5">Your information is never shared or sold.</p>
+            <p class="text-h-muted text-[11px] text-center mt-3">Your information is never shared or sold.</p>
           </form>
 
         </div>
@@ -1295,7 +1295,7 @@
 </div>
 
 <div id="toast" role="alert" aria-live="polite"></div>
-<script src="assets/js/main.js?v=202608021400"></script>
+<script src="assets/js/main.js?v=202608021600"></script>
 <script>
 (function(){
   var items=document.querySelectorAll('.faq-item');

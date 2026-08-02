@@ -313,14 +313,14 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   display: block;
   font-size: 12px; font-weight: 600;
   color: #44576f; letter-spacing: .01em;
-  margin-bottom: 7px;
+  margin-bottom: 4px;
 }
 
 .form-input-light {
   display: block; width: 100%;
   background: #fff; border: 1px solid #d5dde7;
   border-radius: 12px;
-  padding: 13px 15px;
+  padding: 10px 14px;
   color: #0b2140; font-size: 15px; font-family: inherit;
   outline: none; -webkit-appearance: none;
   transition: border-color .18s, box-shadow .18s;

@@ -12,33 +12,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Switched from rsync-over-SSH to plain SFTP. Namecheap's cPanel shell
-      # (jailshell/CageFS) prints a banner on login that corrupts rsync's
-      # binary handshake ("protocol version mismatch -- is your shell clean?").
-      # SFTP talks to a dedicated subsystem instead of the login shell, so it
-      # isn't affected by that banner. Same secrets as before, no new setup.
+      # Stage a clean copy of the site (dev-only files stripped out) locally
+      # on the runner. This rsync runs entirely on GitHub's own machine -
+      # no SSH involved here, so it can't be affected by the remote shell.
+      - name: Build deploy folder (exclude dev-only files)
+        run: |
+          mkdir -p deploy
+          rsync -a \
+            --exclude='.git' --exclude='.github' --exclude='node_modules' \
+            --exclude='*.md' --exclude='.env' --exclude='heliora_deploy_key*' \
+            --exclude='config/config.php' --exclude='.claude' --exclude='.impeccable' \
+            --exclude='designs' --exclude='*.bat' --exclude='*.sql' --exclude='*.jpeg' \
+            --exclude='index-prerebrand-backup.html' --exclude='deploy' \
+            ./ deploy/
+
+      # True SFTP (via ssh2-sftp-client), authenticated with the private key.
+      # Unlike rsync-over-SSH, this doesn't invoke the remote login shell at
+      # all, so it isn't affected by the cPanel jailshell banner that broke
+      # the previous rsync-based step ("protocol version mismatch").
       - name: Deploy via SFTP to Namecheap
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
-          server: ${{ secrets.SSH_HOST }}
-          protocol: sftp
-          port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          local-dir: ./
-          server-dir: /helioraconsulting.com/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/*.md
-            **/.env
-            **/heliora_deploy_key*
-            **/config/config.php
-            **/.claude/**
-            **/.impeccable/**
-            **/designs/**
-            **/*.bat
-            **/*.sql
-            **/*.jpeg
-            **/index-prerebrand-backup.html
+          server: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          local_path: './deploy/*'
+          remote_path: '/home/prosuzec/helioraconsulting.com'
+          sftp_only: true
+          sftpArgs: '-o ConnectTimeout=15'

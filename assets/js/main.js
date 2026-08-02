@@ -23,19 +23,27 @@ window.addEventListener('scroll', () => {
 const menuBtn    = document.getElementById('menu-btn');
 const mobileMenu = document.getElementById('mobile-menu');
 
+function setMenu(open) {
+  mobileMenu.classList.toggle('open', open);
+  menuBtn.classList.toggle('open', open);
+  menuBtn.setAttribute('aria-expanded', String(open));
+}
+
 menuBtn.addEventListener('click', () => {
-  const isOpen = !mobileMenu.classList.contains('hidden');
-  mobileMenu.classList.toggle('hidden', isOpen);
-  menuBtn.classList.toggle('open', !isOpen);
-  menuBtn.setAttribute('aria-expanded', String(!isOpen));
+  setMenu(!mobileMenu.classList.contains('open'));
 });
 
 mobileMenu.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    mobileMenu.classList.add('hidden');
-    menuBtn.classList.remove('open');
-    menuBtn.setAttribute('aria-expanded', 'false');
-  });
+  link.addEventListener('click', () => setMenu(false));
+});
+
+// Close on Escape, and when tapping outside the menu
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && mobileMenu.classList.contains('open')) setMenu(false);
+});
+document.addEventListener('click', e => {
+  if (!mobileMenu.classList.contains('open')) return;
+  if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) setMenu(false);
 });
 
 /* ── Active nav link ─────────────────────────────────────── */
@@ -250,5 +258,20 @@ document.querySelectorAll('a[href="#contact"]').forEach(btn => {
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+  });
+}());
+
+/* ── Back to top ─────────────────────────────────────────── */
+(function () {
+  const btn = document.getElementById('back-to-top');
+  if (!btn) return;
+
+  const toggle = () => btn.classList.toggle('show', window.scrollY > 600);
+  toggle();
+  window.addEventListener('scroll', toggle, { passive: true });
+
+  btn.addEventListener('click', () => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   });
 }());

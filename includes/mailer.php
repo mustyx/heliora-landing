@@ -181,16 +181,8 @@ function buildAutoRespondEmail(string $name, string $service): string {
 
   <!-- Header -->
   <tr>
-    <td style="background:#1b2e6e;padding:36px 48px;text-align:center;">
-      <table cellpadding="0" cellspacing="0" style="margin:0 auto;">
-        <tr>
-          <td style="background:#f47c20;width:44px;height:44px;border-radius:10px;text-align:center;vertical-align:middle;font-family:Georgia,serif;font-size:20px;font-weight:bold;color:#ffffff;">H</td>
-          <td style="padding-left:12px;text-align:left;">
-            <div style="color:#ffffff;font-size:17px;font-weight:700;letter-spacing:0.02em;">HELIORA</div>
-            <div style="color:#f47c20;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;margin-top:2px;">Consulting Limited</div>
-          </td>
-        </tr>
-      </table>
+    <td style="background:#ffffff;padding:32px 48px;text-align:center;border-bottom:1px solid #e8e8ed;">
+      <img src="https://helioraconsulting.com/assets/images/heliora-lockup.png" alt="Heliora Consulting Limited" width="200" style="display:block;margin:0 auto;width:200px;max-width:100%;height:auto;border:0;" />
     </td>
   </tr>
 

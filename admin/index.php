@@ -177,7 +177,69 @@ function showLogin(string $error): void { ?>
     .scrollbar-thin::-webkit-scrollbar { height: 4px; }
     .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
     .scrollbar-thin::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+
+    /* ── Light mode ───────────────────────────────────────────────
+       Remaps the dark Tailwind utilities this page uses onto the
+       Heliora light palette. Applied via .light on <body>.       */
+    body.light,
+    html.pre-light body                 { background: #f4f7fb !important; color: #0b2140 !important; }
+    body.light .bg-gray-950             { background: #f4f7fb !important; }
+    body.light .bg-gray-900             { background: #ffffff !important; }
+    body.light .bg-gray-800             { background: #eef1f5 !important; }
+    body.light .bg-black                { background: #ffffff !important; }
+    body.light .text-white              { color: #0b2140 !important; }
+    body.light .text-gray-300           { color: #44576f !important; }
+    body.light .text-gray-400           { color: #5f7188 !important; }
+    body.light .text-gray-500           { color: #5f7188 !important; }
+    body.light .text-gray-600           { color: #8595a8 !important; }
+    body.light .border-gray-800         { border-color: #e6ecf3 !important; }
+    body.light .border-gray-700         { border-color: #d5dde7 !important; }
+    body.light .divide-gray-800 > * + * { border-color: #e6ecf3 !important; }
+    body.light .hover\:text-white:hover { color: #0a7c7e !important; }
+    body.light input::placeholder       { color: #8595a8 !important; }
+    body.light .scrollbar-thin::-webkit-scrollbar-thumb { background: #d5dde7; }
+    /* Cards and rows get a touch of depth on white */
+    body.light .bg-gray-900.border       { box-shadow: 0 1px 3px rgba(7,33,68,.06); }
+    /* Keep the amber accent readable on a light ground */
+    body.light .text-yellow-400          { color: #8a5a07 !important; }
+    body.light .bg-yellow-500\/10        { background: rgba(208,135,13,.10) !important; }
+    body.light .border-yellow-500\/30    { border-color: rgba(208,135,13,.35) !important; }
+
+    /* Status badges: readable pastels instead of dark translucent fills */
+    body.light .bg-blue-900\/50   { background: #e8f0fe !important; }
+    body.light .text-blue-300     { color: #1a4fa0 !important; }
+    body.light .border-blue-700   { border-color: #b6cef5 !important; }
+    body.light .bg-yellow-900\/50 { background: #fdf4e3 !important; }
+    body.light .text-yellow-300   { color: #8a5a07 !important; }
+    body.light .border-yellow-700 { border-color: #f5e3be !important; }
+    body.light .bg-purple-900\/50 { background: #f3ecfd !important; }
+    body.light .text-purple-300   { color: #6b2fb5 !important; }
+    body.light .border-purple-700 { border-color: #ddc9f7 !important; }
+    body.light .bg-green-900\/50  { background: #e6f5ec !important; }
+    body.light .text-green-300    { color: #1c6b40 !important; }
+    body.light .border-green-700  { border-color: #b9e0c9 !important; }
+    body.light .bg-red-900\/50    { background: #fdecec !important; }
+    body.light .text-red-400      { color: #b42318 !important; }
+    body.light .border-red-800    { border-color: #f6c9c6 !important; }
+    /* Stat card figures */
+    body.light .text-blue-400   { color: #1a4fa0 !important; }
+    body.light .text-purple-400 { color: #6b2fb5 !important; }
+    body.light .text-green-400  { color: #1c6b40 !important; }
+
+    #theme-toggle svg { display: block; }
+    body.light #theme-toggle .icon-sun   { display: none; }
+    body:not(.light) #theme-toggle .icon-moon { display: none; }
   </style>
+  <script>
+    // Apply the saved theme before paint, so the page never flashes dark.
+    (function () {
+      try {
+        if (localStorage.getItem('heliora_admin_theme') === 'light') {
+          document.documentElement.classList.add('pre-light');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="bg-gray-950 text-white min-h-screen">
 
@@ -194,6 +256,16 @@ function showLogin(string $error): void { ?>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
           Export CSV
         </a>
+        <button id="theme-toggle" type="button" aria-label="Toggle light or dark theme" title="Toggle light / dark"
+                class="text-gray-400 hover:text-white transition-colors p-1.5 rounded-lg">
+          <svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+          <svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>
+          </svg>
+        </button>
         <a href="/?logout=1" onclick="return confirm('Sign out?')" class="text-gray-400 hover:text-white text-sm transition-colors">Sign out</a>
         <a href="?logout=1" onclick="return confirm('Sign out?')" class="text-gray-500 hover:text-white transition-colors">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
@@ -357,5 +429,30 @@ function showLogin(string $error): void { ?>
     if (e.target === this) closeModal();
   });
   </script>
+<script>
+/* ── Light / dark theme toggle ─────────────────────────────── */
+(function () {
+  var KEY  = 'heliora_admin_theme';
+  var body = document.body;
+  var btn  = document.getElementById('theme-toggle');
+
+  function apply(theme) {
+    body.classList.toggle('light', theme === 'light');
+    document.documentElement.classList.remove('pre-light');
+  }
+
+  var saved = 'dark';
+  try { saved = localStorage.getItem(KEY) || 'dark'; } catch (e) {}
+  apply(saved);
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var next = body.classList.contains('light') ? 'dark' : 'light';
+      apply(next);
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+    });
+  }
+}());
+</script>
 </body>
 </html>

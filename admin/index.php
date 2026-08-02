@@ -47,6 +47,40 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     exit;
 }
 
+// ── CSRF token (used by the destructive delete action) ────
+if (empty($_SESSION['csrf'])) {
+    $_SESSION['csrf'] = bin2hex(random_bytes(32));
+}
+
+// ── Delete leads (single or bulk) ─────────────────────────
+$deleteNotice = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_leads'])) {
+    if (!hash_equals($_SESSION['csrf'], $_POST['csrf'] ?? '')) {
+        $deleteNotice = 'Security check failed. Please try again.';
+    } else {
+        // Cast every id to int, drop anything invalid
+        $ids = array_values(array_filter(
+            array_map('intval', (array) ($_POST['ids'] ?? [])),
+            fn($i) => $i > 0
+        ));
+
+        if ($ids) {
+            $ph = implode(',', array_fill(0, count($ids), '?'));
+            // email_log rows are removed automatically (FK ON DELETE CASCADE)
+            $del = getDB()->prepare("DELETE FROM leads WHERE id IN ($ph)");
+            $del->execute($ids);
+            $n = $del->rowCount();
+            $_SESSION['flash'] = $n . ' lead' . ($n === 1 ? '' : 's') . ' deleted.';
+        } else {
+            $_SESSION['flash'] = 'No leads were selected.';
+        }
+        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?')
+               . '?status=' . urlencode($_GET['status'] ?? 'all')
+               . ($_GET['q'] ?? '' ? '&q=' . urlencode($_GET['q']) : ''));
+        exit;
+    }
+}
+
 // ── Status update ─────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $id     = (int) ($_POST['lead_id'] ?? 0);
@@ -226,6 +260,11 @@ function showLogin(string $error): void { ?>
     body.light .text-purple-400 { color: #6b2fb5 !important; }
     body.light .text-green-400  { color: #1c6b40 !important; }
 
+    /* Bulk-select controls in light mode */
+    body.light .bg-gray-800.accent-yellow-500,
+    body.light input[type=checkbox] { background: #ffffff !important; border-color: #d5dde7 !important; }
+    body.light #bulk-bar { background: #ffffff !important; border-color: #d5dde7 !important; }
+
     #theme-toggle svg { display: block; }
     body.light #theme-toggle .icon-sun   { display: none; }
     body:not(.light) #theme-toggle .icon-moon { display: none; }
@@ -316,12 +355,44 @@ function showLogin(string $error): void { ?>
       </div>
     </div>
 
+    <!-- Flash message -->
+    <?php if (!empty($_SESSION['flash'])): ?>
+      <div class="mb-4 px-4 py-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm">
+        <?= htmlspecialchars($_SESSION['flash']) ?>
+      </div>
+      <?php unset($_SESSION['flash']); ?>
+    <?php endif; ?>
+    <?php if ($deleteNotice): ?>
+      <div class="mb-4 px-4 py-3 rounded-lg bg-red-900/40 border border-red-800 text-red-400 text-sm">
+        <?= htmlspecialchars($deleteNotice) ?>
+      </div>
+    <?php endif; ?>
+
     <!-- Table -->
+    <form method="POST" id="bulk-form">
+    <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>"/>
+
+    <!-- Bulk action bar (appears once rows are selected) -->
+    <div id="bulk-bar" class="hidden mb-4 px-4 py-3 rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-between gap-4">
+      <span class="text-sm text-gray-400"><span id="bulk-count">0</span> selected</span>
+      <div class="flex items-center gap-2">
+        <button type="button" id="bulk-clear" class="px-3 py-2 text-xs font-medium rounded-lg border border-gray-700 text-gray-400 hover:border-gray-500 transition-colors">Clear</button>
+        <button type="submit" name="delete_leads" value="1" id="bulk-delete"
+                class="px-4 py-2 text-xs font-semibold rounded-lg bg-red-600 hover:bg-red-500 text-white transition-colors">
+          Delete selected
+        </button>
+      </div>
+    </div>
+
     <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
       <div class="overflow-x-auto scrollbar-thin">
         <table class="w-full">
           <thead>
             <tr class="border-b border-gray-800 text-left">
+              <th class="px-4 py-3 w-10">
+                <input type="checkbox" id="check-all" aria-label="Select all leads on this page"
+                       class="w-4 h-4 rounded border-gray-600 bg-gray-800 accent-yellow-500 cursor-pointer"/>
+              </th>
               <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider">#</th>
               <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider">Lead</th>
               <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider hidden md:table-cell">Service</th>
@@ -334,9 +405,14 @@ function showLogin(string $error): void { ?>
           </thead>
           <tbody class="divide-y divide-gray-800">
             <?php if (empty($leads)): ?>
-            <tr><td colspan="8" class="px-6 py-12 text-center text-gray-500">No leads found.</td></tr>
+            <tr><td colspan="9" class="px-6 py-12 text-center text-gray-500">No leads found.</td></tr>
             <?php else: foreach ($leads as $l): ?>
             <tr class="hover:bg-gray-800/50 transition-colors" id="row-<?= $l['id'] ?>">
+              <td class="px-4 py-4">
+                <input type="checkbox" name="ids[]" value="<?= $l['id'] ?>" form="bulk-form"
+                       aria-label="Select lead <?= $l['id'] ?>"
+                       class="row-check w-4 h-4 rounded border-gray-600 bg-gray-800 accent-yellow-500 cursor-pointer"/>
+              </td>
               <td class="px-4 py-4 text-gray-500 text-sm"><?= $l['id'] ?></td>
               <td class="px-4 py-4">
                 <div class="font-medium text-sm"><?= htmlspecialchars($l['first_name'] . ' ' . $l['last_name']) ?></div>
@@ -353,6 +429,12 @@ function showLogin(string $error): void { ?>
               <td class="px-4 py-4">
                 <button onclick="openModal(<?= htmlspecialchars(json_encode($l)) ?>)" class="text-gray-400 hover:text-white transition-colors p-1" title="View">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+                <button type="button" class="row-delete text-gray-400 hover:text-red-400 transition-colors p-1"
+                        data-id="<?= $l['id'] ?>"
+                        data-name="<?= htmlspecialchars($l['first_name'] . ' ' . $l['last_name'], ENT_QUOTES) ?>"
+                        title="Delete">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 </button>
               </td>
             </tr>
@@ -376,6 +458,7 @@ function showLogin(string $error): void { ?>
       </div>
       <?php endif; ?>
     </div>
+    </form>
 
   </main>
 
@@ -452,6 +535,76 @@ function showLogin(string $error): void { ?>
       try { localStorage.setItem(KEY, next); } catch (e) {}
     });
   }
+}());
+</script>
+
+<script>
+/* ── Lead selection + delete ───────────────────────────────── */
+(function () {
+  var form     = document.getElementById('bulk-form');
+  if (!form) return;
+  var checkAll = document.getElementById('check-all');
+  var bar      = document.getElementById('bulk-bar');
+  var countEl  = document.getElementById('bulk-count');
+  var clearBtn = document.getElementById('bulk-clear');
+  var delBtn   = document.getElementById('bulk-delete');
+
+  function rows() { return Array.prototype.slice.call(document.querySelectorAll('.row-check')); }
+  function selected() { return rows().filter(function (c) { return c.checked; }); }
+
+  function sync() {
+    var n = selected().length;
+    countEl.textContent = n;
+    bar.classList.toggle('hidden', n === 0);
+    bar.classList.toggle('flex', n > 0);
+    if (checkAll) {
+      checkAll.checked = n > 0 && n === rows().length;
+      checkAll.indeterminate = n > 0 && n < rows().length;
+    }
+  }
+
+  if (checkAll) {
+    checkAll.addEventListener('change', function () {
+      rows().forEach(function (c) { c.checked = checkAll.checked; });
+      sync();
+    });
+  }
+  rows().forEach(function (c) { c.addEventListener('change', sync); });
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function () {
+      rows().forEach(function (c) { c.checked = false; });
+      if (checkAll) checkAll.indeterminate = false;
+      sync();
+    });
+  }
+
+  if (delBtn) {
+    delBtn.addEventListener('click', function (e) {
+      var n = selected().length;
+      if (!n) { e.preventDefault(); return; }
+      var msg = n === 1
+        ? 'Delete this lead permanently? This cannot be undone.'
+        : 'Delete these ' + n + ' leads permanently? This cannot be undone.';
+      if (!confirm(msg)) e.preventDefault();
+    });
+  }
+
+  // Single-row delete: tick just that row and submit
+  document.querySelectorAll('.row-delete').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id   = btn.getAttribute('data-id');
+      var name = btn.getAttribute('data-name') || 'this lead';
+      if (!confirm('Delete ' + name + ' permanently? This cannot be undone.')) return;
+      rows().forEach(function (c) { c.checked = (c.value === id); });
+      var flag = document.createElement('input');
+      flag.type = 'hidden'; flag.name = 'delete_leads'; flag.value = '1';
+      form.appendChild(flag);
+      form.submit();
+    });
+  });
+
+  sync();
 }());
 </script>
 </body>

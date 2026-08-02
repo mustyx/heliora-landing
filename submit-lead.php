@@ -132,7 +132,7 @@ try {
 
 } catch (PDOException $e) {
     error_log('Lead save failed: ' . $e->getMessage());
-    respond(false, 'An error occurred. Please email us directly at info@helioraconsulting.com', 500);
+    respond(false, 'An error occurred. Please email us directly at contact@helioraconsulting.com', 500);
 }
 
 // ── Send emails ───────────────────────────────────────────

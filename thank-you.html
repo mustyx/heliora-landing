@@ -158,10 +158,14 @@ window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', googleA
     gtag('js', new Date());
     if (T.ga4)       gtag('config', T.ga4);
     if (T.googleAds) gtag('config', T.googleAds);
-    gtag('event', 'generate_lead', { event_category: 'Lead', value: 1 });
-    if (T.googleAds && T.adsLabel) {
-      gtag('event', 'conversion', { send_to: T.googleAds + '/' + T.adsLabel });
-    }
+
+    /* NO generate_lead HERE — removed 9 Aug 2026.
+       This page fired generate_lead on every load, so a refresh, a back-
+       navigation or a bookmarked visit each counted as another conversion,
+       and it double-counted alongside the event on the form page. The lead
+       event is now fired exactly once, on the form page, only after the
+       server confirms the submission, keyed on lead_uid.
+       See Section 10 of the H2 2026 Meta Campaign Strategy. */
   }
 
   if (T.meta) {
@@ -171,6 +175,12 @@ window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', googleA
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
     (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', T.meta);
+    /* PageView only. The pixel was previously initialised here but never
+       fired anything, so this page was invisible to Meta — it could not be
+       used to build an audience or verify the funnel. It must NOT fire Lead:
+       that already happened on the form page, deduplicated against the
+       Conversions API event by event_id. */
+    fbq('track', 'PageView');
   }
 
   if (T.linkedin) {

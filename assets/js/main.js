@@ -3,14 +3,100 @@
    ════════════════════════════════════════════════════════ */
 'use strict';
 
-/* ── UTM & page URL capture ──────────────────────────────── */
-(function captureUTM() {
+/* ── Attribution capture ─────────────────────────────────────
+   Captures the full Meta parameter set, not just source/medium/campaign,
+   so the CRM can compare ads and placements rather than just campaigns.
+   Values are persisted for the session: a visitor who arrives from an ad,
+   browses, and submits later would otherwise lose every parameter.       */
+const HELIORA_ATTR_KEYS = [
+  'utm_source','utm_medium','utm_campaign','utm_content','utm_term',
+  'meta_campaign_id','meta_adset_id','meta_ad_id','placement',
+  'site_source_name','fbclid','gclid','li_fat_id'
+];
+
+function readCookie(name) {
+  const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return m ? decodeURIComponent(m.pop()) : '';
+}
+
+(function captureAttribution() {
   const p = new URLSearchParams(window.location.search);
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
-  set('f_utm_source',   p.get('utm_source')   || '');
-  set('f_utm_medium',   p.get('utm_medium')   || '');
-  set('f_utm_campaign', p.get('utm_campaign') || '');
-  set('f_page_url',     window.location.href);
+  let stored = {};
+  try { stored = JSON.parse(sessionStorage.getItem('heliora_attr') || '{}'); } catch { stored = {}; }
+
+  // First touch in this session wins, so a mid-session internal navigation
+  // cannot blank out the parameters the visitor actually arrived on.
+  HELIORA_ATTR_KEYS.forEach(k => {
+    const fromUrl = p.get(k);
+    if (fromUrl) stored[k] = fromUrl;
+  });
+  try { sessionStorage.setItem('heliora_attr', JSON.stringify(stored)); } catch {}
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  HELIORA_ATTR_KEYS.forEach(k => set('f_' + k, stored[k]));
+  set('f_page_url', window.location.href);
+})();
+
+/* Refresh the values that can only be known at submit time. _fbp and _fbc
+   are written by the Pixel after consent, so they may not exist when the
+   page first loads. Consent state travels with the lead so the server can
+   decide whether forwarding it to Meta is permitted at all.              */
+function refreshSubmitTimeFields() {
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('f_fbp', readCookie('_fbp'));
+  set('f_fbc', readCookie('_fbc'));
+  let consent = 'unset';
+  try { consent = localStorage.getItem('heliora_consent') || 'unset'; } catch {}
+  set('f_consent_state', consent);
+}
+
+/* ── ViewContent: the optimization event ─────────────────────
+   Section 06 of the H2 2026 strategy optimises delivery on ViewContent
+   rather than Lead, because Lead reaches only ~7% of Meta's learning
+   threshold at this budget. For that to work the event must represent
+   real qualified engagement - if it fired on every page load it would
+   just be a landing-page view under another name and would train the
+   algorithm toward the same weak traffic.
+
+   Fires ONCE per session, on whichever comes first:
+     - the visitor opens the consultation modal, or
+     - the visitor reaches the services section AND has been engaged for
+       at least 15 seconds.                                              */
+(function viewContentTrigger() {
+  const KEY = 'heliora_vc_fired';
+  const landedAt = Date.now();
+
+  function alreadyFired() {
+    try { return sessionStorage.getItem(KEY) === '1'; } catch { return false; }
+  }
+  function markFired() {
+    try { sessionStorage.setItem(KEY, '1'); } catch {}
+  }
+
+  window.heliora_fireViewContent = function (reason) {
+    if (alreadyFired() || typeof fbq === 'undefined') return;
+    markFired();
+    fbq('track', 'ViewContent', {
+      content_name: 'Qualified engagement',
+      content_category: reason
+    });
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'qualified_engagement', { event_category: 'Lead', event_label: reason });
+    }
+  };
+
+  const services = document.getElementById('roadmap');
+  if (services && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        if (Date.now() - landedAt < 15000) return;   // too fast to be real interest
+        window.heliora_fireViewContent('services_section');
+        io.disconnect();
+      });
+    }, { threshold: 0.4 });
+    io.observe(services);
+  }
 })();
 
 /* ── Navbar scroll behaviour ─────────────────────────────── */
@@ -132,6 +218,10 @@ if (leadForm) {
     setLoading(true);
     hideError();
 
+    // _fbp / _fbc and the consent choice can change after page load, so read
+    // them now rather than trusting what was captured on arrival.
+    refreshSubmitTimeFields();
+
     let redirecting = false;
 
     try {
@@ -144,27 +234,50 @@ if (leadForm) {
 
       if (data.success) {
         const T = window.HELIORA_TRACKING || {};
+        const service = new FormData(leadForm).get('service');
+
+        /* ── One conversion, one id, one time ────────────────────────
+           The server already sent this Lead to Meta via the Conversions
+           API using data.event_id. Firing the browser event with the SAME
+           id lets Meta deduplicate and keep the richer of the two. Never
+           generate the id here - two different ids means two conversions
+           counted for one lead.
+
+           transport_type 'beacon' matters: this page navigates to
+           thank-you.html immediately afterwards, and a normal XHR would
+           frequently be cancelled mid-flight. That cancellation is why
+           the old implementation under-reported.                        */
         if (typeof gtag !== 'undefined') {
           gtag('event', 'generate_lead', {
             event_category: 'Lead',
-            event_label: new FormData(leadForm).get('service'),
-            value: 1
+            event_label: service,
+            value: 1,
+            transaction_id: data.lead_uid || undefined,   // GA4 dedup key
+            transport_type: 'beacon'
           });
           if (T.googleAds && T.googleAdsLabel) {
-            gtag('event', 'conversion', { send_to: T.googleAds + '/' + T.googleAdsLabel });
+            gtag('event', 'conversion', {
+              send_to: T.googleAds + '/' + T.googleAdsLabel,
+              transaction_id: data.lead_uid || undefined,
+              transport_type: 'beacon'
+            });
           }
         }
-        if (typeof fbq !== 'undefined') {
-          fbq('track', 'Lead');
+        if (typeof fbq !== 'undefined' && data.event_id) {
+          fbq('track', 'Lead', { content_category: service }, { eventID: data.event_id });
         }
         if (typeof lintrk !== 'undefined' && T.linkedinConversionId) {
           lintrk('track', { conversion_id: T.linkedinConversionId });
         }
+
         // Go straight to the thank-you page. Nothing is revealed on this page
         // first — any inline panel would only flash for a few milliseconds
         // before the navigation and read as a glitch.
         redirecting = true;
-        window.location.assign('thank-you.html');
+        // A short pause gives the pixel's own request a chance to leave the
+        // browser. Meta's CAPI event is already safely recorded, so this is
+        // belt-and-braces for match quality, not correctness.
+        setTimeout(() => window.location.assign('thank-you.html'), 250);
       } else {
         showError(data.message || 'Something went wrong. Please email us directly.');
       }
@@ -233,6 +346,12 @@ document.querySelectorAll('a[href="#contact"]').forEach(btn => {
   function openModal() {
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    // Opening the consultation form is the strongest qualified-engagement
+    // signal short of submitting, so it fires ViewContent immediately -
+    // no dwell-time condition needed.
+    if (typeof window.heliora_fireViewContent === 'function') {
+      window.heliora_fireViewContent('form_open');
+    }
     const first = modal.querySelector('input:not([type="hidden"]):not([style*="display:none"])');
     if (first) setTimeout(() => first.focus(), 50);
   }

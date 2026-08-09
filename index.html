@@ -1246,9 +1246,27 @@
           <form id="lead-form" action="submit-lead.php" method="POST" novalidate>
             <input type="hidden" name="source"       value="website_contact_form" />
             <input type="hidden" name="page_url"     id="f_page_url"     />
-            <input type="hidden" name="utm_source"   id="f_utm_source"   />
-            <input type="hidden" name="utm_medium"   id="f_utm_medium"   />
-            <input type="hidden" name="utm_campaign" id="f_utm_campaign" />
+            <!-- Attribution. Populated by captureAttribution() in main.js and
+                 persisted for the session, so a visitor who arrives from an ad
+                 and submits later does not lose the parameters. -->
+            <input type="hidden" name="utm_source"       id="f_utm_source"       />
+            <input type="hidden" name="utm_medium"       id="f_utm_medium"       />
+            <input type="hidden" name="utm_campaign"     id="f_utm_campaign"     />
+            <input type="hidden" name="utm_content"      id="f_utm_content"      />
+            <input type="hidden" name="utm_term"         id="f_utm_term"         />
+            <input type="hidden" name="meta_campaign_id" id="f_meta_campaign_id" />
+            <input type="hidden" name="meta_adset_id"    id="f_meta_adset_id"    />
+            <input type="hidden" name="meta_ad_id"       id="f_meta_ad_id"       />
+            <input type="hidden" name="placement"        id="f_placement"        />
+            <input type="hidden" name="site_source_name" id="f_site_source_name" />
+            <input type="hidden" name="fbclid"           id="f_fbclid"           />
+            <input type="hidden" name="gclid"            id="f_gclid"            />
+            <input type="hidden" name="li_fat_id"        id="f_li_fat_id"        />
+            <!-- Read at submit time, not page load: the Pixel writes _fbp/_fbc
+                 only after consent is granted. -->
+            <input type="hidden" name="fbp"           id="f_fbp"           />
+            <input type="hidden" name="fbc"           id="f_fbc"           />
+            <input type="hidden" name="consent_state" id="f_consent_state" />
             <input type="text"   name="website" style="display:none" tabindex="-1" autocomplete="off" />
 
             <h3 id="modal-form-title" class="text-[20px] font-bold text-h-body mb-0.5">Request a Free Consultation</h3>

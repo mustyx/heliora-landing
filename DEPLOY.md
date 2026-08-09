@@ -36,8 +36,15 @@
 4. Create user: `username_heliora_user` with a strong password
 5. Add user to database with **ALL PRIVILEGES**
 6. Open **phpMyAdmin**, select your database
-7. Click **Import** → upload `database.sql` from this project
-   → All 4 tables are created automatically
+7. Click **Import** → upload **`db-schema.sql`** — NOT `database.sql`
+
+   > **`database.sql` is stale and will build the wrong table.** It predates
+   > the `project_scale` and `client_type` fields and omits both, so a form
+   > submission against it fails on INSERT. It is kept only because the live
+   > table's `zoho_lead_id` / `zoho_synced_at` columns trace back to it.
+   >
+   > Truth = `db-schema.sql` + every file in `migrations/`, applied in date
+   > order. Run the migrations after the import.
 
 ---
 
@@ -141,22 +148,34 @@ define('ADMIN_PASS',  'your_admin_password');
    ```
 5. Copy the `refresh_token` from the response
 
-6. **Set these as environment variables, NOT as literals in `config.php`.**
-   `config.php` reads all five via `getenv()` and defaults to empty/`false`,
-   so committing a secret is never necessary — and `config.php` IS in git.
+6. **Paste them into the SERVER copy of `config/config.php`.**
 
-   cPanel → **Setup Python App** / **MultiPHP INI Editor** → environment
-   variables, or add to `.htaccess` outside the document root:
+   `config/config.php` is listed in `.gitignore` and is not tracked, so the
+   server holds the only real copy and a deploy never overwrites it. This is
+   the same place the `META_CAPI_TOKEN` already lives. Secrets stay out of git
+   because the file is out of git — no env vars involved.
+
+   cPanel → **File Manager** → `public_html/config/config.php` → Edit, and
+   replace the empty fallbacks:
+   ```php
+   define('ZOHO_CLIENT_ID',     getenv('ZOHO_CLIENT_ID')     ?: 'your_client_id');
+   define('ZOHO_CLIENT_SECRET', getenv('ZOHO_CLIENT_SECRET') ?: 'your_client_secret');
+   define('ZOHO_REFRESH_TOKEN', getenv('ZOHO_REFRESH_TOKEN') ?: 'your_refresh_token');
+   define('ZOHO_ENABLED',       true);   // ← was (bool)(getenv(...) ?: false)
    ```
-   SetEnv ZOHO_CLIENT_ID      your_client_id
-   SetEnv ZOHO_CLIENT_SECRET  your_client_secret
-   SetEnv ZOHO_REFRESH_TOKEN  your_refresh_token
-   SetEnv ZOHO_ENABLED        1
-   SetEnv ZOHO_API_DOMAIN     https://www.zohoapis.com
-   ```
-   Until `ZOHO_ENABLED` is set, `pushLeadToZoho()` returns `null` immediately.
-   Leads still save to MySQL and still send email — they just never reach the
-   CRM, silently. That is the current state of production.
+   Leave `ZOHO_API_DOMAIN` as `https://www.zohoapis.com` — correct for a
+   `.com` account. Only change it if your CRM URL is `zoho.eu` / `zoho.in`,
+   in which case use `zohoapis.eu` / `zohoapis.in` AND the matching
+   `ZOHO_ACCOUNTS_URL`. A region mismatch fails with INVALID_TOKEN and looks
+   exactly like a bad credential, so check the domain first if that happens.
+
+   Until `ZOHO_ENABLED` is true, `pushLeadToZoho()` returns `null` on its
+   first line. Leads still save to MySQL and still send email — they just
+   never reach the CRM, silently.
+
+   > **Do NOT use `SetEnv` in `.htaccess` for this.** Namecheap runs
+   > LiteSpeed, which does not implement Apache's `SetEnv` for PHP, so the
+   > values would silently never arrive.
 
 7. Custom fields on the Leads module — **already created, 9 Aug 2026.**
    Nothing to do here. Do NOT recreate them.

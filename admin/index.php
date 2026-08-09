@@ -153,15 +153,75 @@ function statusBadge(string $s): string {
     return "<span class=\"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border $cls\">" . ucfirst($s) . "</span>";
 }
 
+/**
+ * Render a qualification slug for the admin UI.
+ *
+ * Deliberately its own tiny map rather than a require of includes/zoho.php:
+ * that file opens a CRM connection path and defines a dozen functions the
+ * admin panel has no business loading. An unknown slug falls back to a
+ * de-slugged version of itself, so a value added to the form tomorrow still
+ * reads sensibly here before anyone updates this list.
+ */
+function qualLabel(?string $slug): string {
+    if (!$slug) return '';
+    $map = [
+        'exploring'    => 'Exploring',
+        'concept'      => 'Concept defined',
+        'feasibility'  => 'Feasibility',
+        'design'       => 'Design',
+        'procurement'  => 'Procurement',
+        'construction' => 'Construction',
+        'operating'    => 'Operating asset',
+        'immediate'          => 'Immediately',
+        'within_3_months'    => 'Within 3 months',
+        'within_6_months'    => 'Within 6 months',
+        '6_to_12_months'     => '6-12 months',
+        'beyond_12_months'   => 'Beyond 12 months',
+        'unsure'             => 'Timeline unsure',
+        'decision_maker'      => 'Decision maker',
+        'project_owner'       => 'Project owner',
+        'technical_evaluator' => 'Technical evaluator',
+        'mandated_adviser'    => 'Mandated adviser',
+        'influencer'          => 'Contributor',
+        'gathering_info'      => 'Gathering info',
+    ];
+    return $map[$slug] ?? ucfirst(str_replace('_', ' ', $slug));
+}
+
 function exportCSV(): void {
     require_once __DIR__ . '/../config/database.php';
     $leads = getDB()->query('SELECT * FROM leads ORDER BY created_at DESC')->fetchAll();
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="heliora_leads_' . date('Ymd_His') . '.csv"');
     $out = fopen('php://output', 'w');
-    fputcsv($out, ['ID','First Name','Last Name','Email','Phone','Company','Service','Budget','Message','Status','UTM Source','UTM Medium','UTM Campaign','Created At']);
+    // Column set widened 9 Aug 2026. The always-empty Budget column is gone and
+    // the qualification signals plus ad-level attribution are in, because the
+    // Friday feedback loop in Section 17 compares ads on cost per MQL — which
+    // needs the ad id and the qualifiers in the same row, not just the campaign.
+    fputcsv($out, [
+        'ID','First Name','Last Name','Email','Phone','Company','Service',
+        'Client Type','Project Scale','Project Stage','Decision Horizon','Authority',
+        'Qualification Asked','Message','Status',
+        'UTM Source','UTM Medium','UTM Campaign','UTM Content',
+        'Meta Campaign ID','Meta AdSet ID','Meta Ad ID','Placement',
+        'Lead UID','Consent','CAPI Status','Created At',
+    ]);
     foreach ($leads as $l) {
-        fputcsv($out, [$l['id'],$l['first_name'],$l['last_name'],$l['email'],$l['phone'],$l['company'],$l['service'],$l['project_budget'],$l['message'],$l['status'],$l['utm_source'],$l['utm_medium'],$l['utm_campaign'],$l['created_at']]);
+        // Raw slugs, not display labels: this file feeds spreadsheets and
+        // pivot tables, where a stable machine value beats a pretty one.
+        fputcsv($out, [
+            $l['id'], $l['first_name'], $l['last_name'], $l['email'], $l['phone'],
+            $l['company'], $l['service'],
+            $l['client_type'] ?? '', $l['project_scale'] ?? '',
+            $l['project_stage'] ?? '', $l['decision_horizon'] ?? '', $l['authority'] ?? '',
+            !empty($l['qualification_required']) ? 'yes' : 'no',
+            $l['message'], $l['status'],
+            $l['utm_source'], $l['utm_medium'], $l['utm_campaign'], $l['utm_content'] ?? '',
+            $l['meta_campaign_id'] ?? '', $l['meta_adset_id'] ?? '',
+            $l['meta_ad_id'] ?? '', $l['placement'] ?? '',
+            $l['lead_uid'] ?? '', $l['consent_state'] ?? '', $l['capi_status'] ?? '',
+            $l['created_at'],
+        ]);
     }
     fclose($out);
 }
@@ -396,7 +456,11 @@ function showLogin(string $error): void { ?>
               <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider">#</th>
               <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider">Lead</th>
               <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider hidden md:table-cell">Service</th>
-              <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider hidden lg:table-cell">Budget</th>
+              <?php /* Was "Budget" — a column the form has never populated, and
+                       Section 03 defers a budget field until conversion volume is
+                       known. Stage and timeline are what the T+15min triage check
+                       actually needs to see at a glance. */ ?>
+              <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider hidden lg:table-cell">Stage / Timeline</th>
               <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider hidden xl:table-cell">Source</th>
               <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider">Status</th>
               <th class="px-4 py-3 text-gray-500 text-xs font-medium uppercase tracking-wider hidden sm:table-cell">Date</th>
@@ -422,7 +486,18 @@ function showLogin(string $error): void { ?>
               <td class="px-4 py-4 hidden md:table-cell">
                 <span class="text-xs text-gray-300"><?= htmlspecialchars(str_replace('_', ' ', ucfirst($l['service']))) ?></span>
               </td>
-              <td class="px-4 py-4 hidden lg:table-cell text-gray-400 text-xs"><?= htmlspecialchars($l['project_budget'] ?: '—') ?></td>
+              <td class="px-4 py-4 hidden lg:table-cell text-gray-400 text-xs">
+                <?php
+                  $stageLabel = qualLabel($l['project_stage'] ?? '');
+                  $horizLabel = qualLabel($l['decision_horizon'] ?? '');
+                ?>
+                <?php if ($stageLabel || $horizLabel): ?>
+                  <div><?= htmlspecialchars($stageLabel ?: '—') ?></div>
+                  <?php if ($horizLabel): ?><div class="text-gray-500 mt-0.5"><?= htmlspecialchars($horizLabel) ?></div><?php endif; ?>
+                <?php else: ?>
+                  <span class="text-gray-600">not asked</span>
+                <?php endif; ?>
+              </td>
               <td class="px-4 py-4 hidden xl:table-cell text-gray-500 text-xs"><?= htmlspecialchars($l['utm_source'] ?: 'Direct') ?></td>
               <td class="px-4 py-4"><?= statusBadge($l['status']) ?></td>
               <td class="px-4 py-4 hidden sm:table-cell text-gray-500 text-xs whitespace-nowrap"><?= date('d M Y', strtotime($l['created_at'])) ?></td>
@@ -476,6 +551,33 @@ function showLogin(string $error): void { ?>
   </div>
 
   <script>
+  /* De-slug a qualification value for display. Mirrors qualLabel() in PHP:
+     an unmapped slug is de-slugged rather than hidden, so a value added to
+     the form tomorrow still reads sensibly here today. */
+  const Q_LABELS = {
+    exploring:'Exploring — no site identified', concept:'Concept defined, site identified',
+    feasibility:'Feasibility / energy audit', design:'Engineering design',
+    procurement:'Procurement / tender', construction:'Under construction',
+    operating:'Operating asset',
+    immediate:'Immediately', within_3_months:'Within 3 months',
+    within_6_months:'Within 6 months', '6_to_12_months':'6–12 months',
+    beyond_12_months:'Beyond 12 months', unsure:'Not sure yet',
+    decision_maker:'Decision maker', project_owner:'Project owner / lead',
+    technical_evaluator:'Technical evaluator', mandated_adviser:'Mandated adviser',
+    influencer:'Contributor / influencer', gathering_info:'Gathering information',
+    mda:'Ministry, Department & Agency', epc_contractor:'EPC Contractor',
+    project_developer:'Project Developer / IPP',
+    development_agency:'International Development Agency',
+    ci_client:'Commercial & Industrial Client',
+    off_grid_developer:'Off-Grid / Rural Electrification Developer', other:'Other',
+    under_50kw:'Under 50kW', '50kw_500kw':'50kW – 500kW',
+    '500kw_2mw':'500kW – 2MW', above_2mw:'Above 2MW', undecided:'Not yet determined'
+  };
+  function qLabel(slug) {
+    if (!slug) return '<span class="text-gray-600">not asked</span>';
+    return Q_LABELS[slug] || String(slug).replace(/_/g, ' ');
+  }
+
   function openModal(lead) {
     const statusOptions = ['new','contacted','qualified','converted','lost'];
     const statusColors = {new:'text-blue-400',contacted:'text-yellow-400',qualified:'text-purple-400',converted:'text-green-400',lost:'text-red-400'};
@@ -486,10 +588,29 @@ function showLogin(string $error): void { ?>
         <div><div class="text-gray-500 text-xs mb-1">Phone</div><div class="text-sm">${lead.phone || '—'}</div></div>
         <div><div class="text-gray-500 text-xs mb-1">Company</div><div class="text-sm">${lead.company || '—'}</div></div>
         <div><div class="text-gray-500 text-xs mb-1">Service</div><div class="text-sm text-yellow-300">${lead.service.replace(/_/g,' ')}</div></div>
-        <div><div class="text-gray-500 text-xs mb-1">Budget</div><div class="text-sm">${lead.project_budget || '—'}</div></div>
         <div><div class="text-gray-500 text-xs mb-1">Submitted</div><div class="text-sm">${lead.created_at}</div></div>
         <div><div class="text-gray-500 text-xs mb-1">Source</div><div class="text-sm">${[lead.utm_source,lead.utm_medium,lead.utm_campaign].filter(Boolean).join(' / ') || 'Direct'}</div></div>
         <div><div class="text-gray-500 text-xs mb-1">Zoho ID</div><div class="text-sm">${lead.zoho_lead_id || 'Not synced'}</div></div>
+      </div>
+
+      <!-- Qualification. Grouped and labelled so the T+15min triage check can be
+           made from one glance instead of five. "Not asked" is shown explicitly
+           for organic leads, because a blank there means something different
+           from a paid lead who declined to answer. -->
+      <div class="mb-6 p-4 rounded-xl bg-gray-800/40 border border-gray-800">
+        <div class="text-gray-400 text-xs font-medium uppercase tracking-wider mb-3">
+          Qualification
+          <span class="ml-2 normal-case tracking-normal ${lead.qualification_required == 1 ? 'text-yellow-400' : 'text-gray-600'}">
+            ${lead.qualification_required == 1 ? 'paid traffic — required' : 'organic — optional'}
+          </span>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div><div class="text-gray-500 text-xs mb-1">Client Type</div><div class="text-sm">${qLabel(lead.client_type)}</div></div>
+          <div><div class="text-gray-500 text-xs mb-1">Project Scale</div><div class="text-sm">${qLabel(lead.project_scale)}</div></div>
+          <div><div class="text-gray-500 text-xs mb-1">Project Stage</div><div class="text-sm">${qLabel(lead.project_stage)}</div></div>
+          <div><div class="text-gray-500 text-xs mb-1">Decision Timeline</div><div class="text-sm">${qLabel(lead.decision_horizon)}</div></div>
+          <div><div class="text-gray-500 text-xs mb-1">Role in Decision</div><div class="text-sm">${qLabel(lead.authority)}</div></div>
+        </div>
       </div>
       <div class="mb-6">
         <div class="text-gray-500 text-xs mb-2">Message</div>

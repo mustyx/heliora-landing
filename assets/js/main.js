@@ -37,6 +37,57 @@ function readCookie(name) {
   set('f_page_url', window.location.href);
 })();
 
+/* ── Paid-traffic qualification gate ─────────────────────────
+   Section 03 of the H2 2026 strategy asks for Organisation, Client Type,
+   Project Scale, Project Stage and Decision Horizon to be required "for
+   paid traffic" — deliberately not for everyone. The trade is explicit in
+   the document: some raw conversion rate for much stronger qualification.
+   Paid clicks cost money and must be qualified; an organic visitor who
+   found us through search or a referral is cheap to receive and worth
+   capturing on the lightest possible form.
+
+   Paid is decided from the session's persisted attribution, not the
+   current URL, so a visitor who lands on an ad, reads three sections and
+   then opens the modal is still treated as paid traffic.               */
+const HELIORA_PAID_MARKERS = [
+  'fbclid', 'gclid', 'li_fat_id', 'meta_ad_id', 'meta_adset_id', 'meta_campaign_id'
+];
+const HELIORA_PAID_MEDIUMS = ['cpc', 'ppc', 'paid', 'paidsocial', 'paid_social', 'cpm', 'display'];
+
+function isPaidSession() {
+  let attr = {};
+  try { attr = JSON.parse(sessionStorage.getItem('heliora_attr') || '{}'); } catch { attr = {}; }
+
+  // A click identifier or an ad-level id is unambiguous.
+  if (HELIORA_PAID_MARKERS.some(k => attr[k])) return true;
+
+  // Otherwise fall back to utm_medium. Checked against a list rather than
+  // just 'cpc' because the account will not be the only thing writing
+  // these — agencies, boosted posts and email tools all differ.
+  const medium = String(attr.utm_medium || '').toLowerCase().replace(/[^a-z_]/g, '');
+  if (HELIORA_PAID_MEDIUMS.includes(medium)) return true;
+
+  return false;
+}
+
+/* Mark the qualification fields required and reveal their asterisks. Runs
+   once on load. The fields exist in the DOM either way — hiding them for
+   organic visitors would mean two different forms to maintain and would
+   throw away qualification data that organic visitors are often happy to
+   give. They stay optional instead.                                     */
+(function markPaidTrafficRequirements() {
+  if (!isPaidSession()) return;
+
+  document.querySelectorAll('[data-paid-required]').forEach(el => {
+    el.setAttribute('required', 'required');
+    el.setAttribute('aria-required', 'true');
+  });
+  document.querySelectorAll('.lf-req').forEach(el => el.classList.remove('hidden'));
+
+  const flag = document.getElementById('f_qualification_required');
+  if (flag) flag.value = '1';
+})();
+
 /* Refresh the values that can only be known at submit time. _fbp and _fbc
    are written by the Pixel after consent, so they may not exist when the
    page first loads. Consent state travels with the lead so the server can
@@ -199,13 +250,23 @@ if (leadForm) {
     // Honeypot check
     if (leadForm.querySelector('[name="website"]').value) return;
 
-    // Required field validation
-    let valid = true;
+    // Required field validation. On the paid path this now covers six more
+    // fields than it used to, so point the visitor at the first one they
+    // missed rather than making them hunt a longer form for the red border.
+    let firstInvalid = null;
     leadForm.querySelectorAll('[required]').forEach(f => {
       f.classList.remove('error');
-      if (!f.value.trim()) { f.classList.add('error'); valid = false; }
+      if (!f.value.trim()) {
+        f.classList.add('error');
+        if (!firstInvalid) firstInvalid = f;
+      }
     });
-    if (!valid) { showError('Please complete all required fields.'); return; }
+    if (firstInvalid) {
+      showError('Please complete all required fields.');
+      firstInvalid.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      firstInvalid.focus({ preventScroll: true });
+      return;
+    }
 
     // Email validation
     const emailEl = leadForm.querySelector('[name="email"]');

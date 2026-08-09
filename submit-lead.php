@@ -96,6 +96,22 @@ $scale = in_array($_POST['project_scale'] ?? '', $validScales, true) ? ($_POST['
 $validClientTypes = ['mda','epc_contractor','project_developer','development_agency','ci_client','off_grid_developer','other',''];
 $clientType = in_array($_POST['client_type'] ?? '', $validClientTypes, true) ? ($_POST['client_type'] ?? '') : '';
 
+// ── Qualification fields (added 9 Aug 2026) ──────────────
+// Section 03 of the H2 2026 strategy scores a lead out of 100. Stage (15),
+// decision horizon (10) and authority (10) are 35 of those points and had
+// no home before this, so the CRM was applying 60/75 MQL/SQL thresholds to
+// a score that could not exceed 65. Whitelisted rather than trusted: an
+// unrecognised value is stored empty, never rejected, so a stale cached
+// form or a tampered POST can degrade the score but can never lose a lead.
+$validStages = ['exploring','concept','feasibility','design','procurement','construction','operating',''];
+$projectStage = in_array($_POST['project_stage'] ?? '', $validStages, true) ? ($_POST['project_stage'] ?? '') : '';
+
+$validHorizons = ['immediate','within_3_months','within_6_months','6_to_12_months','beyond_12_months','unsure',''];
+$decisionHorizon = in_array($_POST['decision_horizon'] ?? '', $validHorizons, true) ? ($_POST['decision_horizon'] ?? '') : '';
+
+$validAuthority = ['decision_maker','project_owner','technical_evaluator','mandated_adviser','influencer','gathering_info',''];
+$authority = in_array($_POST['authority'] ?? '', $validAuthority, true) ? ($_POST['authority'] ?? '') : '';
+
 // ── Deduplication keys ───────────────────────────────────
 // Generated HERE, at the single point where a submission becomes real.
 // event_id is shared with the browser Lead event so Meta counts one
@@ -124,12 +140,71 @@ if ($fbc === '' && $fbclid !== '') {
 $consentState = in_array($_POST['consent_state'] ?? '', ['accepted','declined','unset'], true)
     ? $_POST['consent_state'] : 'unset';
 
+// ── Paid-traffic qualification gate ──────────────────────
+// Section 03 requires the qualification fields on paid traffic only. The
+// browser decides that from the session's persisted attribution; the server
+// re-derives it here so the stored flag reflects the visit rather than
+// whatever was posted.
+//
+// The enforcement is deliberately asymmetric. If the visit looks paid AND
+// the form says it asked for the fields, a missing field is a real
+// validation error and the visitor is told. If the visit looks paid but the
+// form says it did NOT ask - a stale cached main.js, JS blocked, a bot
+// replaying an old field set - the lead is accepted anyway and the mismatch
+// is logged. Silently discarding a lead that cost real ad money to acquire
+// because our own JS is out of date would be the worse failure by far.
+$paidMarkers = ['fbclid','gclid','li_fat_id','meta_ad_id','meta_adset_id','meta_campaign_id'];
+$isPaid = false;
+foreach ($paidMarkers as $m) {
+    if (!empty($_POST[$m])) { $isPaid = true; break; }
+}
+if (!$isPaid) {
+    $medium = preg_replace('/[^a-z_]/', '', strtolower($_POST['utm_medium'] ?? ''));
+    $isPaid = in_array($medium, ['cpc','ppc','paid','paidsocial','paid_social','cpm','display'], true);
+}
+
+$formAsked = ($_POST['qualification_required'] ?? '0') === '1';
+
+if ($isPaid && $formAsked) {
+    $qualRequired = [
+        'company'          => 'your organisation',
+        'client_type'      => 'client type',
+        'project_scale'    => 'project scale',
+        'project_stage'    => 'current project stage',
+        'decision_horizon' => 'decision timeline',
+        'authority'        => 'your role in the decision',
+    ];
+    $missing = [];
+    foreach ($qualRequired as $field => $label) {
+        if (empty(trim((string) ($_POST[$field] ?? '')))) $missing[] = $label;
+    }
+    if ($missing) {
+        respond(false, 'Please complete: ' . implode(', ', $missing) . '.', 400);
+    }
+}
+
+if ($isPaid && !$formAsked) {
+    error_log('Lead qualification gate: paid attribution present but form did not ask. '
+        . 'Check main.js cache-buster version. utm_medium=' . ($_POST['utm_medium'] ?? '-'));
+}
+
+// Stored as the browser reported it, so a blank stage on an organic lead
+// reads as "never asked" rather than "asked and skipped".
+$qualificationRequired = $formAsked ? 1 : 0;
+
+// Caps tightened 9 Aug 2026 to the LIVE Zoho field lengths, read from
+// GET /crm/v8/settings/fields. They used to match the MySQL columns, which are
+// wider: First_Name 40 vs 100, Last_Name 80 vs 100, Company 200 vs 255,
+// Phone 30 vs 50. A long Nigerian organisation name or a phone with an
+// extension would therefore save cleanly to MySQL, look correct in the admin
+// panel, and then be rejected by Zoho - a silent CRM gap with no visible cause.
+// Truncating here means the DB and the CRM always agree.
 $lead = [
-    'first_name'   => sanitise(substr($_POST['first_name'],  0, 100)),
-    'last_name'    => sanitise(substr($_POST['last_name'],   0, 100)),
+    'first_name'   => sanitise(substr($_POST['first_name'],  0, 40)),
+    'last_name'    => sanitise(substr($_POST['last_name'],   0, 80)),
     'email'        => $email,
-    'phone'        => sanitise(substr($_POST['phone']   ?? '', 0, 50)),
-    'company'      => sanitise(substr($_POST['company'] ?? '', 0, 255)),
+    'phone'        => sanitise(substr($_POST['phone']   ?? '', 0, 30)),
+    'company'      => sanitise(substr($_POST['company'] ?? '', 0, 200)),
     'service'      => $service,
     'project_scale'=> $scale,
     'client_type'  => $clientType,
@@ -156,6 +231,11 @@ $lead = [
     'gclid'            => sanitise(substr($_POST['gclid']     ?? '', 0, 255)),
     'li_fat_id'        => sanitise(substr($_POST['li_fat_id'] ?? '', 0, 255)),
     'consent_state'    => $consentState,
+    // ── added 9 Aug 2026: Section 03 qualification signals ──
+    'project_stage'          => $projectStage,
+    'decision_horizon'      => $decisionHorizon,
+    'authority'             => $authority,
+    'qualification_required'=> $qualificationRequired,
 ];
 
 // ── Save to database ─────────────────────────────────────
@@ -167,13 +247,15 @@ try {
            client_type, message, source, page_url, utm_source, utm_medium, utm_campaign,
            ip_address, user_agent,
            lead_uid, event_id, utm_content, utm_term, meta_campaign_id, meta_adset_id,
-           meta_ad_id, placement, site_source_name, fbp, fbc, gclid, li_fat_id, consent_state)
+           meta_ad_id, placement, site_source_name, fbp, fbc, gclid, li_fat_id, consent_state,
+           project_stage, decision_horizon, authority, qualification_required)
         VALUES
           (:first_name, :last_name, :email, :phone, :company, :service, :project_scale,
            :client_type, :message, :source, :page_url, :utm_source, :utm_medium, :utm_campaign,
            :ip_address, :user_agent,
            :lead_uid, :event_id, :utm_content, :utm_term, :meta_campaign_id, :meta_adset_id,
-           :meta_ad_id, :placement, :site_source_name, :fbp, :fbc, :gclid, :li_fat_id, :consent_state)
+           :meta_ad_id, :placement, :site_source_name, :fbp, :fbc, :gclid, :li_fat_id, :consent_state,
+           :project_stage, :decision_horizon, :authority, :qualification_required)
     ');
     $stmt->execute($lead);
     $lead['id'] = (int) $pdo->lastInsertId();

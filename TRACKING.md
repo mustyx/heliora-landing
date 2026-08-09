@@ -74,11 +74,24 @@ delivery toward exactly the weak traffic the strategy is trying to avoid.
 
 ### 1. Run the database migration
 
-cPanel → phpMyAdmin → select the leads database → **SQL** tab → paste
-`migrations/2026-08-09-tracking.sql` → Go.
+cPanel → phpMyAdmin → select `prosuzec_heliora_leads` → **SQL** tab.
 
-Safe to run more than once. It ends with a SELECT that should return
-**16 rows** — if fewer, it did not complete.
+`migrations/2026-08-09-tracking.sql` is split into three steps. Paste and
+run them **one at a time** so a failure is easy to locate:
+
+1. Add the 16 columns
+2. Add the 4 indexes
+3. `SHOW COLUMNS FROM leads;` to verify
+
+The new columns appear at the bottom of the step 3 output.
+
+> **Note on shared hosting.** The first version of this migration used
+> `information_schema` to make itself idempotent. Namecheap denies cPanel
+> MySQL users access to it — `#1044 Access denied ... to database
+> 'information_schema'`. Rev 2 uses only rights you hold on your own
+> database. If step 1 fails with a **syntax** error near `IF NOT EXISTS`,
+> the host is running stock MySQL rather than MariaDB; use the fallback
+> statements at the bottom of the file instead.
 
 > Do this **before** deploying the code. `submit-lead.php` writes to the
 > new columns; if they don't exist yet, every submission fails.

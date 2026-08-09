@@ -1267,6 +1267,11 @@
             <input type="hidden" name="fbp"           id="f_fbp"           />
             <input type="hidden" name="fbc"           id="f_fbc"           />
             <input type="hidden" name="consent_state" id="f_consent_state" />
+            <!-- Set to 1 by markPaidTrafficRequirements() when the session carries
+                 paid attribution. The server re-derives this from the attribution
+                 fields rather than trusting it, but storing what the visitor was
+                 actually asked keeps lead-quality reporting honest. -->
+            <input type="hidden" name="qualification_required" id="f_qualification_required" value="0" />
             <input type="text"   name="website" style="display:none" tabindex="-1" autocomplete="off" />
 
             <h3 id="modal-form-title" class="text-[20px] font-bold text-h-body mb-0.5">Request a Free Consultation</h3>
@@ -1294,8 +1299,8 @@
                 <input id="lf-phone" type="tel" name="phone" placeholder="+234 801 234 5678" class="form-input-light" />
               </div>
               <div>
-                <label for="lf-company" class="form-label-light">Organisation</label>
-                <input id="lf-company" type="text" name="company" placeholder="Company name" class="form-input-light" />
+                <label for="lf-company" class="form-label-light">Organisation<span class="lf-req hidden"> *</span></label>
+                <input id="lf-company" type="text" name="company" data-paid-required placeholder="Company name" class="form-input-light" />
               </div>
             </div>
 
@@ -1315,8 +1320,8 @@
             </div>
 
             <div class="mb-3">
-              <label for="lf-client-type" class="form-label-light">Client Type</label>
-              <select id="lf-client-type" name="client_type" class="form-input-light">
+              <label for="lf-client-type" class="form-label-light">Client Type<span class="lf-req hidden"> *</span></label>
+              <select id="lf-client-type" name="client_type" data-paid-required class="form-input-light">
                 <option value="" disabled selected>Best describes you…</option>
                 <option value="mda">Ministry, Department &amp; Agency (MDA)</option>
                 <option value="epc_contractor">EPC Contractor</option>
@@ -1329,8 +1334,8 @@
             </div>
 
             <div class="mb-3">
-              <label for="lf-project-scale" class="form-label-light">Approximate Project Scale</label>
-              <select id="lf-project-scale" name="project_scale" class="form-input-light">
+              <label for="lf-project-scale" class="form-label-light">Approximate Project Scale<span class="lf-req hidden"> *</span></label>
+              <select id="lf-project-scale" name="project_scale" data-paid-required class="form-input-light">
                 <option value="" disabled selected>Select scale…</option>
                 <option value="under_50kw">Under 50kW (Solar Home Systems)</option>
                 <option value="50kw_500kw">50kW – 500kW (Mini-Grid / Small C&amp;I)</option>
@@ -1338,6 +1343,53 @@
                 <option value="above_2mw">Above 2MW</option>
                 <option value="undecided">Not yet determined</option>
               </select>
+            </div>
+
+            <!-- Qualification fields. Section 03 of the H2 2026 strategy scores a
+                 lead out of 100 across seven signals; stage, horizon and role are
+                 35 of those points and were previously left to a manual guess at
+                 T+15min. Asked plainly, in the prospect's own language, so they
+                 read as a competent consultant scoping the work rather than as a
+                 sales qualification gate. -->
+            <div class="mb-3">
+              <label for="lf-project-stage" class="form-label-light">Current Project Stage<span class="lf-req hidden"> *</span></label>
+              <select id="lf-project-stage" name="project_stage" data-paid-required class="form-input-light">
+                <option value="" disabled selected>Where is the project now…</option>
+                <option value="exploring">Exploring the idea — no site identified yet</option>
+                <option value="concept">Concept defined, site identified</option>
+                <option value="feasibility">Feasibility / energy audit stage</option>
+                <option value="design">Engineering design in progress</option>
+                <option value="procurement">Procurement / tender / bid stage</option>
+                <option value="construction">Under construction</option>
+                <option value="operating">Operating asset — needs review or expansion</option>
+              </select>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-3 mb-3">
+              <div>
+                <label for="lf-decision-horizon" class="form-label-light">Decision Timeline<span class="lf-req hidden"> *</span></label>
+                <select id="lf-decision-horizon" name="decision_horizon" data-paid-required class="form-input-light">
+                  <option value="" disabled selected>When do you need us…</option>
+                  <option value="immediate">Immediately</option>
+                  <option value="within_3_months">Within 3 months</option>
+                  <option value="within_6_months">Within 6 months</option>
+                  <option value="6_to_12_months">6 – 12 months</option>
+                  <option value="beyond_12_months">Beyond 12 months</option>
+                  <option value="unsure">Not sure yet</option>
+                </select>
+              </div>
+              <div>
+                <label for="lf-authority" class="form-label-light">Your Role in the Decision<span class="lf-req hidden"> *</span></label>
+                <select id="lf-authority" name="authority" data-paid-required class="form-input-light">
+                  <option value="" disabled selected>Select your role…</option>
+                  <option value="decision_maker">I make the final decision</option>
+                  <option value="project_owner">I own or lead the project</option>
+                  <option value="technical_evaluator">I evaluate this technically</option>
+                  <option value="mandated_adviser">I advise on a formal mandate</option>
+                  <option value="influencer">I contribute to the decision</option>
+                  <option value="gathering_info">I am gathering information</option>
+                </select>
+              </div>
             </div>
 
             <div class="mb-4">
@@ -1362,7 +1414,7 @@
 </div>
 
 <div id="toast" role="alert" aria-live="polite"></div>
-<script src="assets/js/main.js?v=202608021800"></script>
+<script src="assets/js/main.js?v=202608091500"></script>
 <script>
 (function(){
   var items=document.querySelectorAll('.faq-item');

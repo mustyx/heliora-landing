@@ -1,5 +1,24 @@
 # Heliora Consulting — Deployment Guide
 
+> ## Migrations run BEFORE the code that needs them
+>
+> The site is already live, so this is now the rule that matters most on every
+> deploy that touches the `leads` table.
+>
+> `submit-lead.php` INSERTs a fixed column list. If the code ships before the
+> migration, **every** submission throws a PDOException and the visitor sees
+> "An error occurred" — leads are lost outright, and paid clicks are lost with
+> them. Adding columns first is harmless: the old code simply ignores them.
+>
+> ```
+> 1. phpMyAdmin → run the migration → confirm with SHOW COLUMNS
+> 2. git push origin main   (or push-live.bat)
+> 3. Submit one real test lead and confirm it lands
+> ```
+>
+> Pending migrations live in `migrations/`, named by date. Currently:
+> `2026-08-09-tracking.sql`, `2026-08-09-qualification-fields.sql`.
+
 ## Step 1: Buy Namecheap Shared Hosting
 
 1. Go to namecheap.com → **Hosting** → **Shared Hosting**
@@ -105,6 +124,12 @@ define('ADMIN_PASS',  'your_admin_password');
    ```
    ZohoCRM.modules.leads.CREATE,ZohoCRM.modules.leads.READ
    ```
+   The scopes actually needed are wider than the two above — field metadata
+   and layouts are required if you ever recreate the custom fields:
+   ```
+   ZohoCRM.modules.leads.CREATE,ZohoCRM.modules.leads.READ,
+   ZohoCRM.settings.fields.READ,ZohoCRM.settings.layouts.READ
+   ```
 4. Exchange for refresh token (one-time, via Postman or curl):
    ```
    POST https://accounts.zoho.com/oauth/v2/token
@@ -115,20 +140,64 @@ define('ADMIN_PASS',  'your_admin_password');
    code=YOUR_GRANT_TOKEN
    ```
 5. Copy the `refresh_token` from the response
-6. In `config.php`:
-   ```php
-   define('ZOHO_CLIENT_ID',     'your_client_id');
-   define('ZOHO_CLIENT_SECRET', 'your_client_secret');
-   define('ZOHO_REFRESH_TOKEN', 'your_refresh_token');
-   define('ZOHO_ENABLED',       true);
+
+6. **Set these as environment variables, NOT as literals in `config.php`.**
+   `config.php` reads all five via `getenv()` and defaults to empty/`false`,
+   so committing a secret is never necessary — and `config.php` IS in git.
+
+   cPanel → **Setup Python App** / **MultiPHP INI Editor** → environment
+   variables, or add to `.htaccess` outside the document root:
    ```
-7. In Zoho CRM, add custom fields to Leads module:
-   - `Service_Interest__c` (Text)
-   - `Project_Budget__c` (Text)
-   - `UTM_Source__c` (Text)
-   - `UTM_Medium__c` (Text)
-   - `UTM_Campaign__c` (Text)
-   - `Website_Source__c` (URL)
+   SetEnv ZOHO_CLIENT_ID      your_client_id
+   SetEnv ZOHO_CLIENT_SECRET  your_client_secret
+   SetEnv ZOHO_REFRESH_TOKEN  your_refresh_token
+   SetEnv ZOHO_ENABLED        1
+   SetEnv ZOHO_API_DOMAIN     https://www.zohoapis.com
+   ```
+   Until `ZOHO_ENABLED` is set, `pushLeadToZoho()` returns `null` immediately.
+   Leads still save to MySQL and still send email — they just never reach the
+   CRM, silently. That is the current state of production.
+
+7. Custom fields on the Leads module — **already created, 9 Aug 2026.**
+   Nothing to do here. Do NOT recreate them.
+
+   The list that used to sit here was wrong in two ways, and is kept below
+   only so the mistake is recognisable if it resurfaces:
+
+   - It used a `__c` suffix (`Service_Interest__c`). That is **Salesforce**
+     convention. Zoho uses a plain api_name, so none of those fields ever
+     existed and every custom value sent to them was discarded.
+   - It listed `Project_Budget__c`. There is deliberately no budget field —
+     Section 03 of the campaign strategy defers one until conversion volume
+     is known.
+
+   The 19 fields that now exist, verified by reading them back from the API:
+
+   | api_name | type |
+   |---|---|
+   | `Client_Type`, `Project_Scale`, `Project_Stage` | picklist |
+   | `Decision_Horizon`, `Decision_Authority` | picklist |
+   | `Qualification_Asked` | picklist (Yes/No) |
+   | `Qualification_Score` | integer(3) |
+   | `Service_Interest` | text(50) |
+   | `Lead_UID` | text(32) |
+   | `Consent_State` | text(20) |
+   | `UTM_Source`, `UTM_Medium` | text(100) |
+   | `UTM_Campaign` | text(150) |
+   | `UTM_Content` | text(255) |
+   | `Meta_Campaign_ID`, `Meta_AdSet_ID`, `Meta_Ad_ID` | text(64) |
+   | `Ad_Placement` | text(100) |
+   | `Website_Source` | textarea(2000) |
+
+   Two names are not the obvious choice because Zoho reserves them:
+   `Lead Score` → `Qualification_Score`, and `Placement` → `Ad_Placement`.
+   `Website_Source` is a textarea rather than text because a real landing URL
+   with a full UTM set plus `fbclid` exceeds 255 characters.
+
+   Picklist values are capped at 25 characters by Zoho, so the CRM labels are
+   shorter than the form labels. The exact strings live in the `map*()`
+   functions in `includes/zoho.php` — if you change one, change the other in
+   the same commit, or Zoho will reject the record.
 
 ---
 

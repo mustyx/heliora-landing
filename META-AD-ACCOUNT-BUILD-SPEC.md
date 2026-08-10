@@ -41,6 +41,29 @@ Gates 4–6 block **ads**, not campaigns or ad sets. The skeleton can be built f
 
 ---
 
+## Build state — 9 August 2026
+
+| Object | ID | State |
+|---|---|---|
+| C01 campaign | `120247183791320384` | **CREATED, PAUSED.** Verified: OUTCOME_LEADS, Highest volume (no cap), NGN 25,000/day |
+| C01 ad set | — | **NOT CREATED.** Three attempts returned Meta `INTERNAL` errors, flagged retryable. Simplified targeting failed identically, so the payload is not the cause. `level=adset` returns `[]` — nothing partial to clean up. Retry later. |
+| C02 campaign | — | Not created. Windowed; not needed until October. |
+| Exclusion audiences | — | Not created. |
+| Website custom audience | — | Not created. Build at launch so the pool starts filling. |
+
+**Unresolved: campaign flight dates.** The create call was sent
+`start_time 2026-08-17T00:00:00+01:00` and `stop_time 2026-12-20T23:59:59+01:00`,
+and the API echoed both back in the accepted spec. But reading the campaign
+returns `start_time: 1970-01-01T00:59:59+0100` and no `stop_time`. Either Meta
+silently dropped them or this read path renders them wrong — the same epoch-zero
+artifact appears on a dataset field, so the read is suspect.
+
+Verify in Ads Manager before launch. If the dates did not stick, the campaign
+will begin delivering as soon as it is unpaused rather than on 17 August, and
+will not go dark automatically on 20 December.
+
+---
+
 ## Campaign structure
 
 Two live campaigns plus an unassigned reserve. The binding constraint is

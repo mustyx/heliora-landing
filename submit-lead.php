@@ -18,6 +18,7 @@ require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/includes/mailer.php';
 require_once __DIR__ . '/includes/zoho.php';
 require_once __DIR__ . '/includes/meta-capi.php';
+require_once __DIR__ . '/includes/lead-score.php';
 
 // ── Rate limiting (simple IP-based) ─────────────────────
 function checkRateLimit(string $ip): bool {
@@ -238,6 +239,27 @@ $lead = [
     'qualification_required'=> $qualificationRequired,
 ];
 
+// ── Score and grade ──────────────────────────────────────
+// Runs BEFORE the insert so score and grade land with the row, not in a
+// follow-up UPDATE. A workflow-triggered alternative leaves a window where
+// the lead exists ungraded, and any report running in that window sees null.
+//
+// Wrapped because scoring must never cost a lead. If it throws, the lead
+// still saves, still emails, still reaches Meta and the CRM - it simply
+// arrives ungraded for a human to judge, which is where it was before this
+// existed.
+$scoreResult = ['score' => null, 'grade' => null, 'reason' => null];
+try {
+    $scoreResult = scoreLead($lead);
+} catch (Throwable $e) {
+    error_log('Lead scoring failed (lead still saved): ' . $e->getMessage());
+}
+
+$lead['lead_score']   = $scoreResult['score'];
+$lead['lead_grade']   = $scoreResult['grade'];
+$lead['score_reason'] = $scoreResult['reason'] !== null
+    ? substr($scoreResult['reason'], 0, 255) : null;
+
 // ── Save to database ─────────────────────────────────────
 try {
     $pdo = getDB();
@@ -248,14 +270,16 @@ try {
            ip_address, user_agent,
            lead_uid, event_id, utm_content, utm_term, meta_campaign_id, meta_adset_id,
            meta_ad_id, placement, site_source_name, fbp, fbc, gclid, li_fat_id, consent_state,
-           project_stage, decision_horizon, authority, qualification_required)
+           project_stage, decision_horizon, authority, qualification_required,
+           lead_score, lead_grade, score_reason)
         VALUES
           (:first_name, :last_name, :email, :phone, :company, :service, :project_scale,
            :client_type, :message, :source, :page_url, :utm_source, :utm_medium, :utm_campaign,
            :ip_address, :user_agent,
            :lead_uid, :event_id, :utm_content, :utm_term, :meta_campaign_id, :meta_adset_id,
            :meta_ad_id, :placement, :site_source_name, :fbp, :fbc, :gclid, :li_fat_id, :consent_state,
-           :project_stage, :decision_horizon, :authority, :qualification_required)
+           :project_stage, :decision_horizon, :authority, :qualification_required,
+           :lead_score, :lead_grade, :score_reason)
     ');
     $stmt->execute($lead);
     $lead['id'] = (int) $pdo->lastInsertId();

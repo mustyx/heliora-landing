@@ -41,7 +41,15 @@ function pushLeadToZoho(array $lead): ?string {
         'Company'      => $lead['company']  ?? 'Not provided',
         'Lead_Source'  => mapLeadSource($lead['utm_source'] ?? ''),
         'Description'  => buildLeadBrief($lead),
-        'Lead_Status'  => 'Not Contacted',
+        /* Lead_Status now reflects the gated grade rather than always being
+           'Not Contacted'. Section 17 gives BD a T+15min triage and a T+2h
+           response; arriving pre-sorted is the difference between working a
+           queue and reading every record. mapGradeToLeadStatus() only ever
+           returns values present in this org's picklist - verified live,
+           and Lead_Status is a strict enum that rejects the whole record. */
+        'Lead_Status'  => isset($lead['lead_grade'])
+            ? mapGradeToLeadStatus((string) $lead['lead_grade'])
+            : 'Not Contacted',
     ];
 
     // ── Custom fields ────────────────────────────────────────
@@ -86,10 +94,17 @@ function pushLeadToZoho(array $lead): ?string {
         'Ad_Placement'       => $lead['placement']        ?? '',
         'Consent_State'      => $lead['consent_state']    ?? '',
         'Website_Source'     => $lead['page_url']         ?? '',
-        // Populated once the scoring gate computes it. Sent only when set, so
-        // an unscored lead shows an empty field rather than a misleading 0 -
-        // "not yet scored" and "scored zero" must not look identical.
-        'Qualification_Score' => isset($lead['lead_score']) ? (string) (int) $lead['lead_score'] : '',
+        /* Omitted entirely for an 'unscored' lead, even though a partial number
+           exists. An organic visitor who was never asked for stage, horizon or
+           authority can still accumulate points from service and client type -
+           and a field reading "20/100" would be read as a weak lead rather
+           than as no data, which is the more damaging of the two errors. The
+           number is still stored in MySQL for analysis; it just must not
+           masquerade as a verdict in the queue BD works from. The grade and
+           its explanation travel in Description instead. */
+        'Qualification_Score' => (isset($lead['lead_score'])
+                                  && ($lead['lead_grade'] ?? '') !== 'unscored')
+            ? (string) (int) $lead['lead_score'] : '',
     ];
 
     // Drop empties. Zoho rejects the whole record if a picklist field is sent
@@ -305,6 +320,22 @@ function mapProjectScale(string $slug): string {
 function buildLeadBrief(array $lead): string {
     $brief = trim((string) ($lead['message'] ?? ''));
 
+    /* The grade and its reason lead, because they determine what the reader
+       does next. Crucially the reason states WHY - a bare "nurture" invites
+       someone to override it on instinct, whereas "score 80 but no decision
+       authority" tells them exactly what to establish on the call. */
+    $verdict = '';
+    if (!empty($lead['lead_grade'])) {
+        $verdict = "\n\n── Qualification verdict ──\n"
+                 . strtoupper((string) $lead['lead_grade'])
+                 . (isset($lead['lead_score']) ? ' · score ' . (int) $lead['lead_score'] . '/100' : '')
+                 . (!empty($lead['score_reason']) ? "\n" . $lead['score_reason'] : '')
+                 . ($lead['lead_grade'] === 'unscored'
+                     ? "\nOrganic visit — the form did not ask. Qualify on the call."
+                     : '')
+                 . "\nBrief quality (5 pts) is a manual judgement — adjust the score if the brief earns it.";
+    }
+
     $rows = array_filter([
         'Stage'     => mapProjectStage((string) ($lead['project_stage'] ?? '')),
         'Timeline'  => mapDecisionHorizon((string) ($lead['decision_horizon'] ?? '')),
@@ -313,13 +344,13 @@ function buildLeadBrief(array $lead): string {
         'Type'      => mapClientType((string) ($lead['client_type'] ?? '')),
     ]);
 
-    if (!$rows) return $brief;
+    if (!$rows) return $brief . $verdict;
 
     $lines = ['', '── Qualification ──'];
     foreach ($rows as $label => $value) {
         $lines[] = $label . ': ' . $value;
     }
-    return $brief . "\n" . implode("\n", $lines);
+    return $brief . "\n" . implode("\n", $lines) . $verdict;
 }
 
 /**

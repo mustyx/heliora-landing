@@ -263,11 +263,32 @@ function scoreLead(array $lead): array {
     // neither is the bug. One real buying signal is the honest middle.
     if ($score >= 60 && $gates['has_org_contact'] && $gates['scale_in_scope']
         && ($gates['has_authority'] || $gates['has_horizon'])) {
-        $missing = !$gates['has_authority'] ? 'no decision authority' : 'no timeline inside six months';
+
+        /* Report the gates that ACTUALLY failed.
+           The first version inferred the gap - if authority was present it
+           assumed horizon was missing - which was wrong whenever both passed
+           and has_real_stage was the real blocker. Live lead 36 hit exactly
+           that: decision-maker, within_3_months, stage 'concept'. It was
+           correctly graded MQL and then told BD there was "no timeline inside
+           six months" while the record plainly showed one, hiding the true
+           gap. A confidently wrong reason is worse than no reason, because it
+           is the thing someone acts on. */
+        $gaps = [];
+        if (!$gates['has_authority'])  $gaps[] = 'no decision authority';
+        if (!$gates['has_horizon'])    $gaps[] = 'no timeline inside six months';
+        if (!$gates['has_real_stage']) $gaps[] = 'project not yet at a real stage';
+
+        // With every gate passing, the only way to land here is a score
+        // between 60 and 74 - so say that rather than inventing a gap.
+        $reason = $gaps
+            ? 'Score ' . $score . ' and contactable, but ' . implode(' and ', $gaps)
+              . '. Establish that on the call.'
+            : 'Score ' . $score . ' with all qualification gates passed, but below the 75 SQL threshold.';
+
         return [
             'score'      => $score,
             'grade'      => 'mql',
-            'reason'     => 'Score ' . $score . ' and contactable, but ' . $missing . '. Establish that on the call.',
+            'reason'     => $reason,
             'gates'      => $gates,
             'components' => $components,
         ];

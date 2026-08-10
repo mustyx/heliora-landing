@@ -52,7 +52,13 @@ ALTER TABLE `leads`
 ALTER TABLE `leads`
   ADD INDEX IF NOT EXISTS `idx_grade_created` (`lead_grade`, `created_at`);
 
-SHOW COLUMNS FROM `leads` LIKE '%score%';
+--  Must return THREE rows. Do not use LIKE '%score%' here - it misses
+--  lead_grade, which does not contain the string "score", and so reports a
+--  successful migration as though a column were absent. That was the original
+--  version of this line and it is exactly the kind of check that looks like
+--  verification without being any.
+
+SHOW COLUMNS FROM `leads` WHERE Field IN ('lead_score', 'lead_grade', 'score_reason');
 
 
 -- ════════════════════════════════════════════════════════════════════

@@ -1,5 +1,11 @@
 # Sensitive config — NEVER push these
 config/config.php
+
+# Temporary diagnostic that exercises the Zoho OAuth chain. Deliberately
+# untracked: if it were committed, deleting it from the server would be
+# undone by the next deploy, and an endpoint that touches the CRM token
+# should not be able to resurrect itself. Upload by hand, delete by hand.
+zoho-check.php
 .env
 .env.*
 *.env

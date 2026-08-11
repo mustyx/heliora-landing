@@ -46,10 +46,30 @@ Gates 4–6 block **ads**, not campaigns or ad sets. The skeleton can be built f
 | Object | ID | State |
 |---|---|---|
 | C01 campaign | `120247183791320384` | **CREATED, PAUSED.** Verified: OUTCOME_LEADS, Highest volume (no cap), NGN 25,000/day |
-| C01 ad set | — | **NOT CREATED.** Three attempts returned Meta `INTERNAL` errors, flagged retryable. Simplified targeting failed identically, so the payload is not the cause. `level=adset` returns `[]` — nothing partial to clean up. Retry later. |
+| C01 ad set | `120247207561410384` | **CREATED via Ads Manager UI, verified by API read.** OFFSITE_CONVERSIONS, Nigeria, 25-65 as Advantage+ suggestions, Advantage+ placements, 1d_view_7d_click, starts 2026-08-17, delivery inactive (campaign_off). Nine API create attempts across two days all returned Meta `INTERNAL` — full spec, minimal required-fields-only, without `custom_event_type`, and with a different optimization goal. Writes at ad set level are broken for this account through this connector; reads work. Build ad sets in the UI. |
 | C02 campaign | — | Not created. Windowed; not needed until October. |
 | Exclusion audiences | — | Not created. |
 | Website custom audience | — | Not created. Build at launch so the pool starts filling. |
+
+### Open items before 17 August
+
+1. **No end date anywhere.** The ad set starts 17 Aug correctly, but neither it
+   nor the campaign carries a `stop_time`. Section 08's December concentration
+   depends on going dark from 21 December — that is where the money funding
+   November and early-December daily rates comes from. Set 20 Dec 2026.
+2. **Account spending limit** — Ads Manager warns "near account spending
+   limit". This halts delivery outright regardless of daily budget, and the
+   plan commits NGN 3M through this account. Raise or remove it.
+3. **ViewContent conversion event cannot be verified by API.**
+   `promoted_object` is not a readable field at ad set level through this
+   connector, so the single most consequential setting in the build rests on a
+   UI screenshot. Re-check it in Ads Manager immediately before launch: if it
+   silently reverted, nothing downstream would reveal it.
+4. **Page `1120580674476963` not connected** — blocks ads, not the structure.
+5. **Instant Form leads are unscored** — see `includes/lead-score.php`. Must be
+   closed before enabling the Instant Form half of the mixed conversion
+   location, or the website-versus-form comparison will read the form as
+   producing zero qualified leads.
 
 **Unresolved: campaign flight dates.** The create call was sent
 `start_time 2026-08-17T00:00:00+01:00` and `stop_time 2026-12-20T23:59:59+01:00`,

@@ -136,7 +136,7 @@ function refreshSubmitTimeFields() {
     }
   };
 
-  const services = document.getElementById('roadmap');
+  const services = document.getElementById('solution');
   if (services && 'IntersectionObserver' in window) {
     const io = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -145,7 +145,7 @@ function refreshSubmitTimeFields() {
         window.heliora_fireViewContent('services_section');
         io.disconnect();
       });
-    }, { threshold: 0.4 });
+    }, { threshold: 0.15 });
     io.observe(services);
   }
 })();
@@ -372,8 +372,9 @@ function hideError() { formError.classList.add('hidden'); }
 
 /* ── GA4 section view tracking ───────────────────────────── */
 const sectionLabels = {
-  home: 'Hero', services: 'Services', clients: 'Who We Serve',
-  'why-us': 'Why Heliora', process: 'Process', contact: 'Contact'
+  home: 'Hero', vsl: 'VSL', problem: 'Problem', solution: 'Solution',
+  clients: 'Who We Serve', roadmap: 'Services', about: 'About',
+  faq: 'FAQ', contact: 'Contact'
 };
 const ga4SectionObs = new IntersectionObserver(entries => {
   entries.forEach(entry => {
@@ -384,7 +385,7 @@ const ga4SectionObs = new IntersectionObserver(entries => {
       });
     }
   });
-}, { threshold: 0.4 });
+}, { threshold: 0.15 });
 document.querySelectorAll('section[id]').forEach(s => ga4SectionObs.observe(s));
 
 /* ── GA4 CTA click tracking ──────────────────────────────── */

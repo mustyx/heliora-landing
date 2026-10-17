@@ -45,7 +45,7 @@ Runs on Namecheap shared hosting (HTML + Tailwind CDN + vanilla JS + PHP + MySQL
 1. **Earn trust before asking.** Lead with proof — specialist depth, named tools, regulatory fluency, concrete deliverables — and let the conversion ask feel like the obvious next step, not a hard sell.
 2. **Show the engineering, don't claim it.** Specificity is the credibility engine. Name the software, the standards (NERC, REA, FMEnv, IFC), the artifacts (SLDs, BEME, protection settings). Concrete detail beats adjectives everywhere.
 3. **Precision as aesthetic.** The visual craft is itself an argument: clean, exact, well-aligned, considered. A firm this careful with a landing page is careful with a mini-grid design.
-4. **Grounded in Nigeria.** Local pricing, local regulation, local site realities — a deliberate contrast to slow, expensive international firms. This is the wedge; keep it visible.
+4. **Grounded in Nigeria, accountable to handover.** First-hand knowledge of NERC, REA and FMEnv processes and of local site realities, plus a team that stays on as Owner's Engineer through construction and commissioning — a deliberate contrast to firms that fly in, hand over a design and leave. This is the wedge; keep it visible. Never frame Heliora as the cheaper or discounted alternative to international firms: compete on specialism, local knowledge and accountability, not price.
 5. **Approachable authority.** Confident and plain-spoken, never intimidating or cold. A serious developer and a curious C&I client should both feel invited to talk.
 
 ## Accessibility & Inclusion

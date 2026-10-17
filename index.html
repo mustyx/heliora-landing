@@ -84,8 +84,8 @@
       </ul>
 
       <div class="flex items-center gap-3">
-        <a href="#contact" class="open-consultation-modal hidden lg:inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-h-orange hover:bg-h-orangeb text-h-body text-[13px] font-semibold transition-all duration-200 hover:scale-105">
-          Free Consultation
+        <a href="#contact" class="open-consultation-modal hidden lg:inline-flex items-center px-5 py-2.5 rounded-lg bg-h-teal hover:bg-h-tealc text-white text-[13px] font-semibold transition-colors duration-200">
+          Discuss Your Project
         </a>
         <button id="menu-btn" class="lg:hidden w-9 h-9 flex flex-col justify-center items-center gap-[5px]" aria-label="Menu">
           <span class="menu-bar block w-5 h-[1.5px] bg-h-body transition-all duration-300 origin-center"></span>
@@ -103,7 +103,7 @@
       <a href="#about"    class="mobile-link text-h-body text-[16px] font-medium py-1">About</a>
       <a href="#faq"      class="mobile-link text-h-body text-[16px] font-medium py-1">FAQ</a>
       <a href="#contact"  class="mobile-link text-h-body text-[16px] font-medium py-1">Contact</a>
-      <a href="#contact" class="open-consultation-modal mt-2 py-3 text-center rounded-full bg-h-orange text-h-body font-semibold text-[15px]">Free Consultation</a>
+      <a href="#contact" class="open-consultation-modal mt-2 py-3 text-center rounded-lg bg-h-teal hover:bg-h-tealc text-white font-semibold text-[15px]">Discuss Your Project</a>
     </div>
   </div>
 </header>
@@ -115,9 +115,10 @@
   <!-- Content — centered, full height -->
   <div class="relative z-10 flex flex-col flex-1">
 
-    <!-- Main centred block. The photo is bounded to this block (not the whole
-         section) so the mini-grid sits above the stats band at every width. -->
-    <div class="relative isolate flex-1 flex flex-col items-center justify-center px-5 pt-[136px] pb-72 sm:pb-56 lg:pt-[104px] lg:pb-44 text-center">
+    <!-- Main hero block, left-aligned to the site grid. The photo is bounded to
+         this block (not the whole section) so the mini-grid sits above the
+         stats band at every width. -->
+    <div class="relative isolate flex-1 flex flex-col justify-center lg:justify-start pt-[128px] pb-72 sm:pb-56 lg:pt-[124px] lg:[@media(max-height:820px)]:pt-[100px] lg:pb-32">
 
       <!-- Full-bleed background image -->
       <img
@@ -126,26 +127,32 @@
         sizes="100vw"
         width="1672" height="941"
         alt="Solar mini-grid with battery and inverter containers, set among palm trees"
-        class="absolute inset-0 -z-10 w-full h-full object-cover object-bottom"
+        class="absolute inset-0 -z-10 w-full h-full object-cover object-[center_40%]"
         loading="eager"
         fetchpriority="high"
       />
       <!-- Legibility scrim: light wash over the sky so navy text clears AA without hiding the photo -->
       <div class="absolute inset-0 -z-10 bg-white/35"></div>
 
-<h1 class="fade-up text-[34px] sm:text-[60px] lg:text-[80px] xl:text-[92px] font-black leading-[0.95] tracking-[-0.04em] text-h-navy max-w-4xl mb-7" style="animation-delay:.1s">
-        Approved. Funded.<br/><span class="text-h-teal">Delivered.</span>
-      </h1>
+      <div class="w-full max-w-screen-xl mx-auto px-5 lg:px-12">
 
-      <p class="fade-up text-h-navy text-[18px] lg:text-[20px] leading-[1.6] mb-10 max-w-2xl" style="animation-delay:.22s">
-        Nigeria's specialist solar engineering consultancy. We take mini-grids from design through construction, commissioning and handover — so you end up with a plant that runs, not a folder of drawings.
-      </p>
+        <h1 class="fade-up text-[32px] sm:text-[46px] lg:text-[54px] xl:text-[60px] lg:[@media(max-height:820px)]:text-[48px] font-black leading-[1.02] tracking-[-0.03em] text-h-navy max-w-4xl mb-6" style="animation-delay:.1s">
+          Solar mini-grids engineered to be approved, funded and <span class="text-h-teal">delivered.</span>
+        </h1>
 
-      <div class="fade-up flex flex-wrap items-center justify-center gap-4" style="animation-delay:.32s">
-        <a href="#contact" class="open-consultation-modal inline-flex items-center gap-2 px-8 py-4 rounded-full bg-h-orange hover:bg-h-orangeb text-h-body font-bold text-[16px] transition-all duration-200 hover:scale-105 shadow-[0_8px_32px_rgba(208,135,13,0.45)]">
-          Request a Free Consultation
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-        </a>
+        <p class="fade-up text-h-navy text-[18px] lg:text-[20px] leading-[1.6] mb-9 max-w-xl" style="animation-delay:.22s">
+          Specialist design and independent oversight from concept to commissioning, so the plant you finance is the plant you get.
+        </p>
+
+        <div class="fade-up flex flex-wrap items-center gap-x-8 gap-y-5" style="animation-delay:.32s">
+          <a href="#contact" class="open-consultation-modal inline-flex items-center px-8 py-4 rounded-lg bg-h-teal hover:bg-h-tealc text-white font-semibold text-[16px] transition-colors duration-200">
+            Discuss Your Project
+          </a>
+          <a href="#receive" class="text-h-tealc hover:text-h-navy font-semibold text-[16px] underline decoration-2 underline-offset-[6px] transition-colors duration-200">
+            See what you receive
+          </a>
+        </div>
+
       </div>
 
     </div>
@@ -177,7 +184,7 @@
 
 
 <!-- ═══════════════════════ 2. SOCIAL PROOF — MARKET STATS ═══════════════════════ -->
-<section class="bg-h-offwhite border-y border-h-divider">
+<section id="receive" class="bg-h-offwhite border-y border-h-divider scroll-mt-[60px]">
   <div class="max-w-screen-xl mx-auto px-5 lg:px-12 py-14">
 
     <!-- ═══════════ REMOVED 9 Aug 2026 — institutional association strip ═══════════

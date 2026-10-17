@@ -112,21 +112,26 @@
 <!-- ═══════════════════════ 1. HOOK — HERO ═══════════════════════ -->
 <section id="home" class="relative min-h-[100svh] overflow-hidden flex flex-col">
 
-  <!-- Full-bleed background image -->
-  <img
-    src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1800&q=90"
-    alt="Aerial view of a solar mini-grid"
-    class="absolute inset-0 w-full h-full object-cover"
-    loading="eager"
-  />
-  <!-- Legibility scrim: solid-enough wash so navy/orange text always clears AA over the photo -->
-  <div class="absolute inset-0 bg-white/60"></div>
-
   <!-- Content — centered, full height -->
-  <div class="relative z-10 flex flex-col flex-1 pt-[72px]">
+  <div class="relative z-10 flex flex-col flex-1">
 
-    <!-- Main centred block -->
-    <div class="flex-1 flex flex-col items-center justify-center px-5 py-16 text-center">
+    <!-- Main centred block. The photo is bounded to this block (not the whole
+         section) so the mini-grid sits above the stats band at every width. -->
+    <div class="relative isolate flex-1 flex flex-col items-center justify-center px-5 pt-[136px] pb-72 sm:pb-56 lg:pt-[104px] lg:pb-44 text-center">
+
+      <!-- Full-bleed background image -->
+      <img
+        src="assets/images/hero-minigrid.webp"
+        srcset="assets/images/hero-minigrid-900.webp 900w, assets/images/hero-minigrid.webp 1672w"
+        sizes="100vw"
+        width="1672" height="941"
+        alt="Solar mini-grid with battery and inverter containers, set among palm trees"
+        class="absolute inset-0 -z-10 w-full h-full object-cover object-bottom"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <!-- Legibility scrim: light wash over the sky so navy text clears AA without hiding the photo -->
+      <div class="absolute inset-0 -z-10 bg-white/35"></div>
 
 <h1 class="fade-up text-[34px] sm:text-[60px] lg:text-[80px] xl:text-[92px] font-black leading-[0.95] tracking-[-0.04em] text-h-navy max-w-4xl mb-7" style="animation-delay:.1s">
         Approved. Funded.<br/><span class="text-h-teal">Delivered.</span>

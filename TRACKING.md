@@ -54,9 +54,9 @@ counted twice, which is worse than the bug we just fixed.
 
 ## Consent model (updated 23 Oct 2026)
 
-- The cookie banner was removed on 23 Oct 2026. Browser tags (Meta Pixel, GA4, LinkedIn Insight, X pixel) load on every page view.
-- Server-side Meta events (Conversions API) still send only when `consent_state` is `accepted`. With no banner, no visitor can record `accepted`, so **server-side Meta events are off for new visitors**. Browser events still reach Meta. This was a deliberate decision: the gate stays.
-- Every new lead records `consent_state='unset'`. Zoho's `Consent_State` field shows the same value.
+- The consent banner is back (23 Oct 2026). It was removed earlier the same day and restored with a prompt. Browser tags (Meta Pixel, GA4, LinkedIn Insight, X pixel) load only after **Accept**. Decline loads nothing.
+- Server-side Meta events (Conversions API) send only when `consent_state` is `accepted`, which is set by clicking Accept. Declined or unanswered visitors send no Meta events.
+- A lead records `accepted`, `declined`, or `unset` (no choice yet). Zoho's `Consent_State` field shows the same value.
 - A browser that accepted the old banner before 23 Oct 2026 still holds `heliora_consent = accepted` in localStorage. Leads from that browser record `accepted`, so tests from it do not represent new visitors.
 - Verified 23 Oct 2026: lead 41 (submitted 12:58, `accepted` from such a browser) recorded `capi_status='sent'`, and Meta returned `events_received: 1`. The server path works for accepted leads. Older leads 39 and 40 also show `sent`.
 
@@ -133,7 +133,7 @@ Double-click `push-live.bat`.
 
 1. In `config/config.php` set `META_TEST_EVENT_CODE` to the code shown in
    **Events Manager → Test events**.
-2. Submit a real test lead through the live form. The cookie banner was removed on 23 Oct 2026, so a new browser records `consent_state='unset'` and the server-side event skips. To test the server path, run `localStorage.setItem('heliora_consent','accepted')` in that browser first, then submit.
+2. Submit a real test lead through the live form. Click **Accept** on the banner first, so the lead records `consent_state='accepted'` and the server-side event sends. To test the decline path, click **Decline**: no tags load and the server-side event skips.
 3. Check all four places. They must agree:
 
 | Where | Expect |
@@ -151,8 +151,8 @@ Double-click `push-live.bat`.
 
 ### Also test
 
-Unset consent (no server-side Meta events, but the lead still saves and
-emails, and the browser tags still fire); duplicate submit; validation failure; thank-you refresh; slow
+Declined consent (no tags and no server-side Meta events, but the lead still saves and
+emails); duplicate submit; validation failure; thank-you refresh; slow
 connection; Android; iOS.
 
 ## Reading `capi_status`
@@ -160,7 +160,7 @@ connection; Android; iOS.
 | Value | Meaning |
 |---|---|
 | `sent` | Meta accepted the event. |
-| `skipped_consent` | Visitor has not accepted (`unset`, or `declined` from before 23 Oct 2026). Since the banner was removed, this is the status for almost every visitor. It is designed behaviour, not a fault. |
+| `skipped_consent` | Visitor declined, or has not answered the banner yet. Designed behaviour, not a fault. |
 | `skipped_config` | No token configured. Step 2 is incomplete. |
 | `failed` | Meta rejected it, or the network failed. Check `capi_response` and the PHP error log. |
 | `error` | Exception thrown. Check the error log. |

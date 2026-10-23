@@ -89,7 +89,7 @@ function isPaidSession() {
 })();
 
 /* Refresh the values that can only be known at submit time. _fbp and _fbc
-   are written by the Pixel after consent, so they may not exist when the
+   are written by the Pixel after it loads, so they may not exist when the
    page first loads. Consent state travels with the lead so the server can
    decide whether forwarding it to Meta is permitted at all.              */
 function refreshSubmitTimeFields() {
@@ -329,6 +329,9 @@ if (leadForm) {
         }
         if (typeof lintrk !== 'undefined' && T.linkedinConversionId) {
           lintrk('track', { conversion_id: T.linkedinConversionId });
+        }
+        if (typeof twq !== 'undefined' && T.twitterLeadEvent) {
+          twq('event', T.twitterLeadEvent, {});
         }
 
         // Go straight to the thank-you page. Nothing is revealed on this page

@@ -138,16 +138,20 @@
 <script>
 /* ── Tracking configuration ───────────────────────────────────────────
    Keep these values IDENTICAL to the ones in index.html.
-   Conversion events fire here only after the visitor has accepted
-   cookies on the main site. Leave blank to disable a channel.
+   Leave blank to disable a channel.
      adsLabel  Google Ads conversion label, e.g. 'AbC-D_efG'
    ─────────────────────────────────────────────────────────────────── */
-window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', googleAds:'', ga4:'G-YEKKX9KCND', adsLabel:'' };
+window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', googleAds:'', ga4:'G-YEKKX9KCND', twitter:'rhvk3', adsLabel:'' };
 
 (function(){
-  var T = window.HELIORA_TRACKING, consent = null;
-  try { consent = localStorage.getItem('heliora_consent'); } catch(e){}
-  if (consent !== 'accepted') return;          // respect the cookie choice
+  var T = window.HELIORA_TRACKING;
+
+  if (T.twitter) {
+    !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+    },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+    a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+    twq('config',T.twitter);
+  }
 
   if (T.ga4 || T.googleAds) {
     var s = document.createElement('script'); s.async = true;

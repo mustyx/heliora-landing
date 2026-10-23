@@ -1275,7 +1275,7 @@
             <input type="hidden" name="gclid"            id="f_gclid"            />
             <input type="hidden" name="li_fat_id"        id="f_li_fat_id"        />
             <!-- Read at submit time, not page load: the Pixel writes _fbp/_fbc
-                 only after consent is granted. -->
+                 after it has loaded. -->
             <input type="hidden" name="fbp"           id="f_fbp"           />
             <input type="hidden" name="fbc"           id="f_fbc"           />
             <input type="hidden" name="consent_state" id="f_consent_state" />
@@ -1473,47 +1473,26 @@
 })();
 </script>
 
-<!-- ═══════════════════════ COOKIE CONSENT ═══════════════════════ -->
-<div id="cookie-banner" class="hidden fixed bottom-0 left-0 right-0 z-[100] p-4 sm:p-6">
-  <div class="max-w-4xl mx-auto bg-white border border-h-divider rounded-2xl shadow-[0_20px_60px_rgba(7,33,68,0.18)] p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4">
-    <div class="flex-1">
-      <p class="font-bold text-h-body text-[15px] mb-1">We use cookies to measure our marketing</p>
-      <p class="text-h-muted text-[13px] leading-relaxed">
-        Analytics and advertising cookies help us understand which campaigns reach project developers and funders.
-        Essential cookies needed to run the site are always on.
-        <a href="#" id="cookie-more" class="text-h-teal underline hover:no-underline">What we collect</a>
-      </p>
-      <p id="cookie-detail" class="hidden text-h-muted text-[12px] leading-relaxed mt-2 pt-2 border-t border-h-divider">
-        With your consent we load Meta, LinkedIn, Google Ads and Google Analytics tags. These set cookies that let us
-        attribute enquiries to campaigns. You can decline and still use every part of this site — the consultation form
-        works either way. Your choice is stored on this device and you can change it any time by clearing your cookies.
-      </p>
-    </div>
-    <div class="flex gap-3 flex-shrink-0">
-      <button id="cookie-decline" type="button" class="px-5 py-2.5 rounded-full border border-h-border text-h-mid hover:bg-h-offwhite font-semibold text-[14px] transition-colors">Decline</button>
-      <button id="cookie-accept" type="button" class="px-6 py-2.5 rounded-full bg-h-orange hover:bg-h-orangeb text-h-body font-bold text-[14px] transition-colors">Accept</button>
-    </div>
-  </div>
-</div>
-
 <script>
 /* ── Tracking configuration ───────────────────────────────────────────
    Paste your IDs below to switch each channel on. While a value is empty
-   that tag never loads, and if ALL are empty no consent banner is shown
-   (nothing to consent to). Tags only fire AFTER the visitor accepts.
+   that tag never loads. Tags load on every page view; there is no
+   consent banner.
      meta                 Meta/Facebook Pixel ID     e.g. '1234567890123456'
      linkedin             LinkedIn Partner ID        e.g. '1234567'
      linkedinConversionId LinkedIn Conversion ID     e.g. '9876543' (from Campaign Manager > Conversion Tracking)
      googleAds            Google Ads conversion ID   e.g. 'AW-123456789'
      googleAdsLabel       Google Ads conversion label e.g. 'AbC-D_efG-h12_34ijK'
      ga4                  GA4 measurement ID         e.g. 'G-XXXXXXXXXX'
+     twitter              X (Twitter) pixel ID       e.g. 'rhvk3'
+     twitterLeadEvent     X Lead event ID            e.g. 'tw-rhvk3-rhvk5' (from Events manager > Add event)
      zohoSalesIQ          Zoho SalesIQ widget code   e.g. 'siqxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
    ─────────────────────────────────────────────────────────────────── */
-window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', linkedinConversionId:'29101866', googleAds:'', googleAdsLabel:'', ga4:'G-YEKKX9KCND', zohoSalesIQ:'' };
+window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', linkedinConversionId:'29101866', googleAds:'', googleAdsLabel:'', ga4:'G-YEKKX9KCND', twitter:'rhvk3', twitterLeadEvent:'tw-rhvk3-rhvk5', zohoSalesIQ:'' };
 
 (function(){
-  var T=window.HELIORA_TRACKING, KEY='heliora_consent';
-  var configured = !!(T.meta||T.linkedin||T.googleAds||T.ga4||T.zohoSalesIQ);
+  var T=window.HELIORA_TRACKING;
+  var configured = !!(T.meta||T.linkedin||T.googleAds||T.ga4||T.twitter||T.zohoSalesIQ);
 
   function loadTags(){
     if(T.ga4||T.googleAds){
@@ -1534,6 +1513,12 @@ window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', linkedi
       t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
       (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
       fbq('init',T.meta); fbq('track','PageView');
+    }
+    if(T.twitter){
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      twq('config',T.twitter);
     }
     if(T.linkedin){
       window._linkedin_partner_id=T.linkedin;
@@ -1556,25 +1541,7 @@ window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', linkedi
     }
   }
 
-  var banner=document.getElementById('cookie-banner');
-  var stored=null;
-  try{ stored=localStorage.getItem(KEY); }catch(e){}
-
-  if(!configured){ return; }          // nothing to gate yet
-  if(stored==='accepted'){ loadTags(); return; }
-  if(stored==='declined'){ return; }
-
-  if(banner) banner.classList.remove('hidden');
-  function choose(v){
-    try{ localStorage.setItem(KEY,v); }catch(e){}
-    if(banner) banner.classList.add('hidden');
-    if(v==='accepted') loadTags();
-  }
-  var a=document.getElementById('cookie-accept'), d=document.getElementById('cookie-decline'),
-      m=document.getElementById('cookie-more'), det=document.getElementById('cookie-detail');
-  if(a) a.addEventListener('click',function(){choose('accepted');});
-  if(d) d.addEventListener('click',function(){choose('declined');});
-  if(m) m.addEventListener('click',function(e){e.preventDefault(); if(det) det.classList.toggle('hidden');});
+  if(configured) loadTags();
 })();
 </script>
 </body>

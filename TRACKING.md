@@ -52,6 +52,14 @@ them into one.
 **Never generate `event_id` in the browser.** Two ids means one lead
 counted twice, which is worse than the bug we just fixed.
 
+## Consent model (updated 23 Oct 2026)
+
+- The cookie banner was removed on 23 Oct 2026. Browser tags (Meta Pixel, GA4, LinkedIn Insight, X pixel) load on every page view.
+- Server-side Meta events (Conversions API) still send only when `consent_state` is `accepted`. With no banner, no visitor can record `accepted`, so **server-side Meta events are off for new visitors**. Browser events still reach Meta. This was a deliberate decision: the gate stays.
+- Every new lead records `consent_state='unset'`. Zoho's `Consent_State` field shows the same value.
+- A browser that accepted the old banner before 23 Oct 2026 still holds `heliora_consent = accepted` in localStorage. Leads from that browser record `accepted`, so tests from it do not represent new visitors.
+- Verified 23 Oct 2026: lead 41 (submitted 12:58, `accepted` from such a browser) recorded `capi_status='sent'`, and Meta returned `events_received: 1`. The server path works for accepted leads. Older leads 39 and 40 also show `sent`.
+
 ## ViewContent — the optimization event
 
 Section 06 optimises delivery on ViewContent rather than Lead, because
@@ -125,14 +133,14 @@ Double-click `push-live.bat`.
 
 1. In `config/config.php` set `META_TEST_EVENT_CODE` to the code shown in
    **Events Manager → Test events**.
-2. Submit a real test lead through the live form, with cookies accepted.
+2. Submit a real test lead through the live form. The cookie banner was removed on 23 Oct 2026, so a new browser records `consent_state='unset'` and the server-side event skips. To test the server path, run `localStorage.setItem('heliora_consent','accepted')` in that browser first, then submit.
 3. Check all four places. They must agree:
 
 | Where | Expect |
 |---|---|
 | Events Manager → Test events | **One** Lead. Server and Browser both listed against it, marked deduplicated — not two separate Leads. |
 | GA4 → Realtime | **One** `generate_lead`. Refresh thank-you.html a few times: the count must **not** move. |
-| phpMyAdmin → `leads` | Newest row has `lead_uid`, `event_id`, `consent_state='accepted'`, `capi_status='sent'`. |
+| phpMyAdmin → `leads` | Newest row has `lead_uid` and `event_id`. With the step 2 override: `consent_state='accepted'`, `capi_status='sent'`. Without it: `consent_state='unset'`, `capi_status='skipped_consent'`. |
 | Inbox | Auto-responder and admin notification both arrived. |
 
 4. Trigger ViewContent: load the page, wait 15+ seconds, scroll to
@@ -143,8 +151,8 @@ Double-click `push-live.bat`.
 
 ### Also test
 
-Declined consent (no Meta events at all, but the lead still saves and
-emails); duplicate submit; validation failure; thank-you refresh; slow
+Unset consent (no server-side Meta events, but the lead still saves and
+emails, and the browser tags still fire); duplicate submit; validation failure; thank-you refresh; slow
 connection; Android; iOS.
 
 ## Reading `capi_status`
@@ -152,7 +160,7 @@ connection; Android; iOS.
 | Value | Meaning |
 |---|---|
 | `sent` | Meta accepted the event. |
-| `skipped_consent` | Visitor declined cookies. Correct behaviour, not a fault. |
+| `skipped_consent` | Visitor has not accepted (`unset`, or `declined` from before 23 Oct 2026). Since the banner was removed, this is the status for almost every visitor. It is designed behaviour, not a fault. |
 | `skipped_config` | No token configured. Step 2 is incomplete. |
 | `failed` | Meta rejected it, or the network failed. Check `capi_response` and the PHP error log. |
 | `error` | Exception thrown. Check the error log. |
@@ -174,6 +182,14 @@ GROUP BY day ORDER BY day DESC;
 weekly scorecard asks for. Persistent gaps mean consent decline rates or
 a token problem — not, any longer, a race condition.
 
+## X (Twitter) pixel
+
+- Pixel ID `rhvk3`, set as `twitter` in `window.HELIORA_TRACKING` in `index.html` and `thank-you.html`. The base code loads `static.ads-twitter.com/uwt.js` and calls `twq('config','rhvk3')`.
+- Lead conversion: event `tw-rhvk3-rhvk5`, created in X Events manager as "Lead" (type "Sign up"). `assets/js/main.js` fires it on a successful form submit, next to the Meta Lead event.
+- Check: X Ads → Events manager. "Lead" should be Active, with "Last recorded" after a test submit. The base pixel also records "Site visits".
+- The X Lead event is sent from the browser only. It fires just before the 250 ms redirect, so it may under-count, as LinkedIn may.
+- `main.js` is cache-busted by the `?v=` value in `index.html`. Bump it whenever `main.js` changes, or returning visitors keep the old copy.
+
 ## Ad URL parameters
 
 Set this as the destination URL suffix on every ad so the CRM can compare
@@ -194,7 +210,7 @@ First touch in the session wins.
 | `migrations/2026-08-09-tracking.sql` | Adds 16 columns + 4 indexes. Idempotent. |
 | `includes/meta-capi.php` | Conversions API client. Hashing, consent gate, 4s timeout. |
 | `submit-lead.php` | Generates the dedup keys, persists attribution, calls CAPI, returns `event_id`. |
-| `assets/js/main.js` | Attribution capture, ViewContent trigger, deduplicated Lead. |
-| `index.html` | Hidden attribution fields. |
+| `assets/js/main.js` | Attribution capture, ViewContent trigger, deduplicated Lead, X Lead event. |
+| `index.html` | Hidden attribution fields; `window.HELIORA_TRACKING` (incl. X pixel); tag loaders. |
 | `thank-you.html` | PageView only. |
 | `config/config.php` | Meta constants. Server copy only — gitignored, not deployed. |

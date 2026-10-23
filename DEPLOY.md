@@ -12,7 +12,9 @@
 >
 > ```
 > 1. phpMyAdmin → run the migration → confirm with SHOW COLUMNS
-> 2. git push origin main   (or push-live.bat)
+> 2. git push origin main   (or push-live.bat). As of 23 Oct 2026 this push runs
+>    `.github/workflows/deploy.yml`, which uploads the site by SFTP. No cPanel
+>    "Update" click is needed.
 > 3. Submit one real test lead and confirm it lands
 > ```
 >
@@ -114,12 +116,15 @@ define('ADMIN_PASS',  'your_admin_password');
 1. Go to analytics.google.com → Create property
 2. Set up a **Web** data stream for `helioraconsulting.com`
 3. Copy your **Measurement ID** (format: `G-XXXXXXXXXX`)
-4. In `index.html`, replace both instances of `GA_MEASUREMENT_ID`:
-   ```html
-   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-   ...
-   gtag('config', 'G-XXXXXXXXXX');
-   ```
+4. Set the ID in `window.HELIORA_TRACKING` in `index.html`, and mirror it in
+   `thank-you.html`. The live value is `G-YEKKX9KCND`. The tag loader adds the
+   gtag script and config, so the HTML needs no literal `gtag` tags.
+
+### X (Twitter) pixel
+
+Pixel `rhvk3` is set as `twitter` in `window.HELIORA_TRACKING`, and the Lead
+event `tw-rhvk3-rhvk5` is fired from `assets/js/main.js`. Details and checks
+are in `TRACKING.md`, under "X (Twitter) pixel".
 
 ---
 
@@ -172,6 +177,10 @@ define('ADMIN_PASS',  'your_admin_password');
    Until `ZOHO_ENABLED` is true, `pushLeadToZoho()` returns `null` on its
    first line. Leads still save to MySQL and still send email — they just
    never reach the CRM, silently.
+
+   **Status, 23 Oct 2026:** working end to end. A test lead from the live form
+   reached Zoho with a `Lead_UID`. Both test leads were deleted afterwards.
+   Re-run this check after any change to the server's `config/config.php`.
 
    > **Do NOT use `SetEnv` in `.htaccess` for this.** Namecheap runs
    > LiteSpeed, which does not implement Apache's `SetEnv` for PHP, so the

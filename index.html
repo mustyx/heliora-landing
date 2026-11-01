@@ -9,49 +9,11 @@
   <meta property="og:type" content="website" />
   <title>Heliora Consulting Limited | Solar Engineering. Precisely Delivered.</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            h: {
-              white:   '#ffffff',
-              offwhite:'#f4f7fb',
-              subtle:  '#fafcfe',
-              body:    '#0b2140',
-              mid:     '#44576f',
-              muted:   '#5f7188',
-              border:  '#d5dde7',
-              divider: '#e6ecf3',
-              greylt:  '#eef1f5',
-              teal:    '#0a7c7e',
-              tealb:   '#22adaf',
-              tealc:   '#076c6e',
-              teallt:  '#e6f2f2',
-              tealbd:  '#cde5e5',
-              navy:    '#072144',
-              navylt:  '#eaeff6',
-              navymid: '#123163',
-              navybd:  '#d5e0ef',
-              orange:  '#d0870d',
-              orangeb: '#e0a63a',
-              orangec: '#8a5a07',
-              orangecd:'#6f4806',
-              orangelt:'#fdf4e3',
-              orangebd:'#f5e3be',
-            }
-          },
-          fontFamily: {
-            sans: ['-apple-system','BlinkMacSystemFont','Inter','system-ui','sans-serif'],
-          },
-        }
-      }
-    }
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="assets/css/tailwind.css?v=202611011100" />
   <link rel="stylesheet" href="assets/css/style-rebrand.css?v=202608021800" />
 
 </head>
@@ -64,7 +26,7 @@
     <nav class="flex items-center justify-between h-[60px]">
 
       <a href="#home" class="flex items-center gap-3 flex-shrink-0">
-        <img src="assets/images/heliora-lockup.png?v=202607262032" alt="Heliora Consulting Limited" class="h-12 w-auto"
+        <img src="assets/images/heliora-lockup.webp?v=202611011100" width="510" height="168" alt="Heliora Consulting Limited" class="h-12 w-auto"
              onerror="this.style.display='none';document.getElementById('logo-fb').style.display='flex';" />
         <div id="logo-fb" class="hidden items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-h-navy to-h-navymid flex items-center justify-center font-black text-white text-sm">H</div>
@@ -277,7 +239,7 @@
     <div class="reveal max-w-4xl mx-auto">
       <div id="vsl-player" class="relative rounded-3xl overflow-hidden bg-h-navy shadow-[0_30px_80px_rgba(7,33,68,0.25)]" style="aspect-ratio:16/9;">
         <button id="vsl-play" type="button" class="group absolute inset-0 w-full h-full block cursor-pointer" aria-label="Play video: Heliora Consulting — Who We Are, 5 minutes">
-          <img src="https://i.ytimg.com/vi/lroZQ1CKh44/maxresdefault.jpg" alt=""
+          <img src="https://i.ytimg.com/vi/lroZQ1CKh44/sddefault.jpg" alt=""
                class="w-full h-full object-cover opacity-50" loading="lazy"
                onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/lroZQ1CKh44/hqdefault.jpg';" />
           <span class="absolute inset-0 bg-gradient-to-br from-h-navy/80 to-h-navy/50"></span>
@@ -1153,14 +1115,14 @@
 
       <div class="col-span-2 md:col-span-5">
         <a href="#home" class="inline-flex items-center gap-3 mb-6">
-          <img src="assets/images/heliora-lockup.png?v=202607262032" alt="Heliora Consulting Limited" class="h-11 w-auto"
+          <img src="assets/images/heliora-lockup.webp?v=202611011100" width="510" height="168" loading="lazy" alt="Heliora Consulting Limited" class="h-11 w-auto"
                onerror="this.style.display='none';document.getElementById('footer-logo-fb').style.display='block';" />
           <div id="footer-logo-fb" class="hidden">
             <div class="text-h-body font-black text-[14px] tracking-[0.06em]">HELIORA</div>
             <div class="text-h-teal text-[8px] tracking-[0.2em] uppercase font-semibold">Consulting Limited</div>
           </div>
         </a>
-        <p class="text-h-muted text-[13px] leading-relaxed max-w-xs mb-6">Nigeria's fast growing solar engineering consulting company. Accelerating Africa's energy transition through technical excellence and local expertise.</p>
+        <p class="text-h-mid text-[13px] leading-relaxed max-w-xs mb-6">Nigeria's fast growing solar engineering consulting company. Accelerating Africa's energy transition through technical excellence and local expertise.</p>
         <p class="text-h-muted text-[12px]">Bassan Plaza, Central Business District, FCT Abuja, Nigeria</p>
         <div class="flex gap-3 mt-5">
           <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-btn-light">
@@ -1199,7 +1161,7 @@
         <ul class="space-y-3 text-[13px]">
           <li><a href="mailto:contact@helioraconsulting.com" class="text-h-muted hover:text-h-teal transition-colors break-all">contact@helioraconsulting.com</a></li>
           <li class="text-h-muted">Bassan Plaza, Central Business District, FCT Abuja, Nigeria</li>
-          <li class="pt-1"><a href="#contact" class="open-consultation-modal inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-h-orangeb/12 border border-h-orangeb/30 text-h-orangeb text-[12px] font-semibold hover:bg-h-orangeb/20 transition-colors">Free Consultation →</a></li>
+          <li class="pt-1"><a href="#contact" class="open-consultation-modal inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-h-orangeb/12 border border-h-orangeb/30 text-h-orangec text-[12px] font-semibold hover:bg-h-orangeb/20 transition-colors">Free Consultation →</a></li>
         </ul>
       </div>
 

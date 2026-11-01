@@ -38,6 +38,7 @@ Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
     ExpiresActive On
     ExpiresByType text/css              "access plus 1 month"
     ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript       "access plus 1 month"
     ExpiresByType image/jpeg            "access plus 1 year"
     ExpiresByType image/png             "access plus 1 year"
     ExpiresByType image/svg+xml         "access plus 1 month"
@@ -63,4 +64,10 @@ RedirectMatch 404 ^/\.git
   <FilesMatch "\.(css|js|png|jpg|jpeg|svg|webp|woff2?)$">
     Header set Cache-Control "public, max-age=31536000"
   </FilesMatch>
+
+  # Security headers (CSP is deliberately omitted: the Meta/X/Zoho tags
+  # need a tested allow-list first). HSTS starts at 30 days; raise it
+  # once the site has run clean on HTTPS.
+  Header always set Strict-Transport-Security "max-age=2592000"
+  Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
 </IfModule>

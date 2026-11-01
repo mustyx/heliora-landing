@@ -9,6 +9,11 @@
   <meta property="og:type" content="website" />
   <title>Heliora Consulting Limited | Solar Engineering. Precisely Delivered.</title>
 
+  <!-- Start the hero download before the inlined CSS below, so the image is not
+       discovered only after ~40 KB of styles have arrived. -->
+  <link rel="preload" as="image" href="assets/images/hero-minigrid-800.avif" type="image/avif" media="(max-width: 640px)" fetchpriority="high" />
+  <link rel="preload" as="image" imagesrcset="assets/images/hero-minigrid-800.webp 800w, assets/images/hero-minigrid-900.webp 900w, assets/images/hero-minigrid.webp 1672w" imagesizes="100vw" media="(min-width: 641px)" fetchpriority="high" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
@@ -85,16 +90,19 @@
     <div class="relative isolate flex-1 flex flex-col justify-center lg:justify-start pt-[128px] pb-72 sm:pb-56 lg:pt-[124px] lg:[@media(max-height:820px)]:pt-[100px] lg:pb-32">
 
       <!-- Full-bleed background image -->
-      <img
-        src="assets/images/hero-minigrid.webp"
-        srcset="assets/images/hero-minigrid-800.webp 800w, assets/images/hero-minigrid-900.webp 900w, assets/images/hero-minigrid.webp 1672w"
-        sizes="100vw"
-        width="1672" height="941"
-        alt="Solar mini-grid with battery and inverter containers, set among palm trees"
-        class="absolute inset-0 -z-10 w-full h-full object-cover object-[center_40%]"
-        loading="eager"
-        fetchpriority="high"
-      />
+      <picture>
+        <source type="image/avif" media="(max-width: 640px)" srcset="assets/images/hero-minigrid-800.avif" />
+        <img
+          src="assets/images/hero-minigrid.webp"
+          srcset="assets/images/hero-minigrid-800.webp 800w, assets/images/hero-minigrid-900.webp 900w, assets/images/hero-minigrid.webp 1672w"
+          sizes="100vw"
+          width="1672" height="941"
+          alt="Solar mini-grid with battery and inverter containers, set among palm trees"
+          class="absolute inset-0 -z-10 w-full h-full object-cover object-[center_40%]"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </picture>
       <!-- Legibility scrim: light wash over the sky so navy text clears AA without hiding the photo -->
       <div class="absolute inset-0 -z-10 bg-white/35"></div>
 

@@ -36,5 +36,5 @@ module.exports = Object.assign({
     }
   }
 }, {
-  content: ['./index.html', './assets/js/main.js'],
+  content: ['./index.html', './privacy.html', './assets/js/main.js'],
 });

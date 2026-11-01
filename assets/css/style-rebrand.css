@@ -490,7 +490,8 @@ h1, h2 {
 .mobile-menu.open .mobile-link:nth-child(3) { transition-delay: .14s; }
 .mobile-menu.open .mobile-link:nth-child(4) { transition-delay: .18s; }
 .mobile-menu.open .mobile-link:nth-child(5) { transition-delay: .22s; }
-.mobile-menu.open .open-consultation-modal  { transition-delay: .26s; }
+.mobile-menu.open .mobile-link:nth-child(6) { transition-delay: .26s; }
+.mobile-menu.open .open-consultation-modal  { transition-delay: .30s; }
 
 /* ─── Back-to-top button ──────────────────────────────────────── */
 #back-to-top {

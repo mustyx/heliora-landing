@@ -2,7 +2,7 @@
   "name": "heliora-landing-page",
   "private": true,
   "scripts": {
-    "build:css": "tailwindcss -c tailwind.config.js -i src/tailwind.css -o assets/css/tailwind.css --minify"
+    "build:css": "tailwindcss -c tailwind.config.js -i src/tailwind.css -o assets/css/tailwind.css --minify && node scripts/inline-css.js"
   },
   "devDependencies": {
     "tailwindcss": "3.4.17"

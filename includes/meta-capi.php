@@ -22,9 +22,11 @@
      - Never generate an event_id in the browser.
 
    CONSENT
-   Nothing is sent unless the visitor accepted cookies. A lead captured
-   under declined consent is still stored and still emailed to the team;
-   it is simply never forwarded to Meta.
+   The cookie banner was removed on 9 Nov 2026. Leads now arrive with
+   consent_state 'notice' (footer notice shown, no choice asked) and are
+   sent. 'accepted' (old browsers that clicked Accept) is also sent.
+   'declined' and 'unset' (old banner era) are stored and emailed but
+   never forwarded to Meta.
 
    CONFIG (config/config.php, or environment variables)
      META_PIXEL_ID        e.g. '1071599118775013'
@@ -90,9 +92,9 @@ function metaHashPhone(?string $phone): ?string {
 function sendMetaLeadEvent(array $lead): array {
 
     // ── Consent gate ────────────────────────────────────────────────
-    if (($lead['consent_state'] ?? '') !== 'accepted') {
+    if (!in_array($lead['consent_state'] ?? '', ['notice', 'accepted'], true)) {
         return ['status' => 'skipped_consent',
-                'detail' => 'Visitor did not accept marketing cookies.'];
+                'detail' => 'Visitor declined marketing cookies under the old banner.'];
     }
 
     // ── Config gate ─────────────────────────────────────────────────

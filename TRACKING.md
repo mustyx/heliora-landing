@@ -52,13 +52,12 @@ them into one.
 **Never generate `event_id` in the browser.** Two ids means one lead
 counted twice, which is worse than the bug we just fixed.
 
-## Consent model (updated 23 Oct 2026)
+## Consent model (updated 9 Nov 2026)
 
-- The consent banner is back (23 Oct 2026). It was removed earlier the same day and restored with a prompt. Browser tags (Meta Pixel, GA4, LinkedIn Insight, X pixel) load only after **Accept**. Decline loads nothing.
-- Server-side Meta events (Conversions API) send only when `consent_state` is `accepted`, which is set by clicking Accept. Declined or unanswered visitors send no Meta events.
-- A lead records `accepted`, `declined`, or `unset` (no choice yet). Zoho's `Consent_State` field shows the same value.
-- A browser that accepted the old banner before 23 Oct 2026 still holds `heliora_consent = accepted` in localStorage. Leads from that browser record `accepted`, so tests from it do not represent new visitors.
-- Verified 23 Oct 2026: lead 41 (submitted 12:58, `accepted` from such a browser) recorded `capi_status='sent'`, and Meta returned `events_received: 1`. The server path works for accepted leads. Older leads 39 and 40 also show `sent`.
+- **No consent banner since 9 Nov 2026**, at the owner's request. Every configured browser tag (GA4, Meta Pixel, LinkedIn Insight, X pixel) loads on the first visit, after the page's `load` event. A one-line footer notice on index.html and thank-you.html links to privacy.html#cookies, which was rewritten the same day.
+- Every new lead records `consent_state='notice'` (notice shown, no choice asked). Zoho's `Consent_State` (text) shows the same value.
+- Server-side Meta events (Conversions API) send for `notice` and `accepted`. Older leads with `declined` or `unset` are never forwarded.
+- History: the banner ran from 23 Oct to 9 Nov 2026; tags loaded only after **Accept**, and almost no visitors accepted, so GA4 and the ad platforms saw almost no traffic (0 LinkedIn sessions in GA for 40 LinkedIn clicks, 4–8 Nov).
 
 ## ViewContent — the optimization event
 
@@ -133,14 +132,14 @@ Double-click `push-live.bat`.
 
 1. In `config/config.php` set `META_TEST_EVENT_CODE` to the code shown in
    **Events Manager → Test events**.
-2. Submit a real test lead through the live form. Click **Accept** on the banner first, so the lead records `consent_state='accepted'` and the server-side event sends. To test the decline path, click **Decline**: no tags load and the server-side event skips.
+2. Submit a real test lead through the live form. It records `consent_state='notice'` and the server-side event sends.
 3. Check all four places. They must agree:
 
 | Where | Expect |
 |---|---|
 | Events Manager → Test events | **One** Lead. Server and Browser both listed against it, marked deduplicated — not two separate Leads. |
 | GA4 → Realtime | **One** `generate_lead`. Refresh thank-you.html a few times: the count must **not** move. |
-| phpMyAdmin → `leads` | Newest row has `lead_uid` and `event_id`. With the step 2 override: `consent_state='accepted'`, `capi_status='sent'`. Without it: `consent_state='unset'`, `capi_status='skipped_consent'`. |
+| phpMyAdmin → `leads` | Newest row has `lead_uid` and `event_id`. `consent_state='notice'`, `capi_status='sent'`. |
 | Inbox | Auto-responder and admin notification both arrived. |
 
 4. Trigger ViewContent: load the page, wait 15+ seconds, scroll to
@@ -151,8 +150,7 @@ Double-click `push-live.bat`.
 
 ### Also test
 
-Declined consent (no tags and no server-side Meta events, but the lead still saves and
-emails); duplicate submit; validation failure; thank-you refresh; slow
+Duplicate submit; validation failure; thank-you refresh; slow
 connection; Android; iOS.
 
 ## Reading `capi_status`
@@ -160,7 +158,7 @@ connection; Android; iOS.
 | Value | Meaning |
 |---|---|
 | `sent` | Meta accepted the event. |
-| `skipped_consent` | Visitor declined, or has not answered the banner yet. Designed behaviour, not a fault. |
+| `skipped_consent` | Lead from the banner era (23 Oct–9 Nov 2026) that declined or never answered. New leads should not show this. |
 | `skipped_config` | No token configured. Step 2 is incomplete. |
 | `failed` | Meta rejected it, or the network failed. Check `capi_response` and the PHP error log. |
 | `error` | Exception thrown. Check the error log. |

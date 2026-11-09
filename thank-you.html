@@ -132,22 +132,21 @@
 <footer class="bg-h-navy text-white/60 py-[clamp(0.4rem,1.5dvh,0.75rem)] shrink-0">
   <div class="max-w-screen-xl mx-auto px-5 lg:px-12 text-center text-[clamp(10px,1.6dvh,12px)]">
     &copy; 2026 Heliora Consulting Limited. All rights reserved. Abuja, Nigeria.
+    <span class="block text-[10px] text-white/50">This website uses cookies from Google, Meta, LinkedIn and X to measure its performance. We do not sell your data. <a href="privacy.html#cookies" class="underline hover:text-white">Learn more</a></span>
   </div>
 </footer>
 
 <script>
 /* ── Tracking configuration ───────────────────────────────────────────
    Keep these values IDENTICAL to the ones in index.html.
-   Conversion events fire here only after the visitor has accepted
-   cookies on the main site. Leave blank to disable a channel.
+   There is no consent banner (removed 9 Nov 2026), so every configured
+   tag loads here too. Leave a value blank to disable that channel.
      adsLabel  Google Ads conversion label, e.g. 'AbC-D_efG'
    ─────────────────────────────────────────────────────────────────── */
 window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', googleAds:'', ga4:'G-YEKKX9KCND', twitter:'rhvk3', adsLabel:'' };
 
 (function(){
-  var T = window.HELIORA_TRACKING, consent = null;
-  try { consent = localStorage.getItem('heliora_consent'); } catch(e){}
-  if (consent !== 'accepted') return;          // respect the cookie choice
+  var T = window.HELIORA_TRACKING;
 
   if (T.twitter) {
     !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);

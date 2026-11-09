@@ -90,15 +90,14 @@ function isPaidSession() {
 
 /* Refresh the values that can only be known at submit time. _fbp and _fbc
    are written by the Pixel after it loads, so they may not exist when the
-   page first loads. Consent state travels with the lead so the server can
-   decide whether forwarding it to Meta is permitted at all.              */
+   page first loads. Consent state travels with the lead and is stored with
+   it. Since the banner was removed (9 Nov 2026) every lead records
+   'notice': the visitor saw the footer notice but was not asked to choose. */
 function refreshSubmitTimeFields() {
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
   set('f_fbp', readCookie('_fbp'));
   set('f_fbc', readCookie('_fbc'));
-  let consent = 'unset';
-  try { consent = localStorage.getItem('heliora_consent') || 'unset'; } catch {}
-  set('f_consent_state', consent);
+  set('f_consent_state', 'notice');
 }
 
 /* ── ViewContent: the optimization event ─────────────────────

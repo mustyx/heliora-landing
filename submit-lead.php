@@ -138,7 +138,7 @@ if ($fbc === '' && $fbclid !== '') {
     $fbc = 'fb.1.' . (time() * 1000) . '.' . $fbclid;
 }
 
-$consentState = in_array($_POST['consent_state'] ?? '', ['accepted','declined','unset'], true)
+$consentState = in_array($_POST['consent_state'] ?? '', ['notice','accepted','declined','unset'], true)
     ? $_POST['consent_state'] : 'unset';
 
 // ── Paid-traffic qualification gate ──────────────────────

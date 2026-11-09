@@ -4,9 +4,11 @@
   "scripts": {
     "build:css": "tailwindcss -c tailwind.config.js -i src/tailwind.css -o assets/css/tailwind.css --minify && node scripts/inline-css.js",
     "build:js": "terser assets/js/main.js --compress --mangle -o assets/js/main.min.js",
-    "build": "npm run build:js && npm run build:css"
+    "build:insights": "node scripts/build-insights.js",
+    "build": "npm run build:js && npm run build:css && npm run build:insights"
   },
   "devDependencies": {
+    "marked": "^15.0.12",
     "tailwindcss": "3.4.17",
     "terser": "^5.51.2"
   }

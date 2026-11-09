@@ -1,0 +1,76 @@
+/* Insights (blog) pages. Layout comes from Tailwind; this file holds the
+   article typography and the few pieces Tailwind can't express cleanly.
+   Colours follow the rebrand tokens in tailwind.config.js. */
+
+.skip-link {
+  position: absolute; left: 16px; top: -48px; z-index: 100;
+  padding: 10px 14px; border-radius: 8px;
+  background: #072144; color: #fff; font-size: 14px; font-weight: 600;
+  transition: top .15s ease;
+}
+.skip-link:focus { top: 12px; }
+
+.ins-header { backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); }
+
+a:focus-visible, button:focus-visible { outline: 2px solid #0a7c7e; outline-offset: 3px; border-radius: 6px; }
+.ins-cta a:focus-visible { outline-color: #e0a63a; }
+
+/* Article list: the arrow nudges on hover so the whole row reads as one link. */
+.ins-read span { display: inline-block; transition: transform .2s ease; }
+.ins-row:hover .ins-read span { transform: translateX(4px); }
+.ins-more-title { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-weight: 700; letter-spacing: -0.01em; }
+
+/* ── Article body ──────────────────────────────────────────── */
+.prose-h { color: #2c3f57; font-size: 17.5px; line-height: 1.75; }
+.prose-h > * + * { margin-top: 1.15em; }
+.prose-h p { max-width: 68ch; }
+
+.prose-h h2 {
+  font-size: clamp(25px, 3vw, 31px); line-height: 1.2; color: #0b2140;
+  margin-top: 2.1em; margin-bottom: -.2em; scroll-margin-top: 88px;
+}
+.prose-h h3 {
+  font-size: 19px; font-weight: 700; line-height: 1.35; color: #0b2140;
+  letter-spacing: -0.01em; margin-top: 1.8em; margin-bottom: -.35em;
+}
+.prose-h strong { color: #0b2140; font-weight: 650; }
+.prose-h a { color: #076c6e; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.prose-h a:hover { color: #0a7c7e; text-decoration-thickness: 2px; }
+
+.prose-h ul, .prose-h ol { padding-left: 1.35em; }
+.prose-h ul { list-style: disc; }
+.prose-h ol { list-style: decimal; }
+.prose-h li { padding-left: .3em; }
+.prose-h li + li { margin-top: .5em; }
+.prose-h li::marker { color: #0a7c7e; font-weight: 700; }
+
+/* Blockquotes become a tinted callout with a full hairline border
+   (no thick side stripe, per DESIGN.md). */
+.prose-h blockquote {
+  background: #e6f2f2; border: 1px solid #cde5e5; border-radius: 16px;
+  padding: 20px 24px; color: #0b2140; font-size: 16.5px; line-height: 1.65;
+}
+.prose-h blockquote > * + * { margin-top: .7em; }
+.prose-h blockquote p { max-width: none; }
+
+.prose-h table {
+  width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.55;
+  display: block; overflow-x: auto;
+}
+.prose-h th, .prose-h td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid #e6ecf3; }
+.prose-h th { color: #0b2140; font-weight: 700; background: #f4f7fb; white-space: nowrap; }
+.prose-h td { color: #44576f; }
+
+.prose-h hr { border: 0; border-top: 1px solid #e6ecf3; margin: 2.4em 0; }
+.prose-h code { font-size: .9em; background: #f4f7fb; border: 1px solid #e6ecf3; border-radius: 5px; padding: .1em .35em; }
+
+@media (max-width: 640px) {
+  .prose-h { font-size: 17px; }
+  .prose-h th, .prose-h td { min-width: 160px; }
+  .prose-h th:first-child, .prose-h td:first-child { min-width: 120px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ins-read span, .skip-link { transition: none; }
+  .ins-row:hover .ins-read span { transform: none; }
+}

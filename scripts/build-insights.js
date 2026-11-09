@@ -100,7 +100,10 @@ function head({ title, description, url, type = 'website', jsonld, section = 'in
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${SITE}/assets/images/og-insights.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="/assets/images/logo-2026.png" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
   <link rel="preload" href="/assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/assets/css/tailwind.css?v=${v}" />
   <link rel="stylesheet" href="/assets/css/style-rebrand.css?v=${v}" />

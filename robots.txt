@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /thank-you.html
+Disallow: /submit-lead.php
+Disallow: /zoho-check.php
+Disallow: /tests-
+
+Sitemap: https://helioraconsulting.com/sitemap.xml

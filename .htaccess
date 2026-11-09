@@ -72,3 +72,7 @@ RedirectMatch 404 ^/\.git
   Header always set Strict-Transport-Security "max-age=2592000"
   Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
 </IfModule>
+
+# Web app manifest and favicon types
+AddType application/manifest+json .webmanifest
+AddType image/x-icon .ico

@@ -20,6 +20,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid #0a7c7e; outline-offs
 .ins-row:hover .ins-read span { transform: translateX(4px); }
 .ins-more-title { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-weight: 700; letter-spacing: -0.01em; }
 
+/* Service page key facts strip: hairline grid, cells on white. */
+.ins-fact { background: #fff; padding: 16px 18px; }
+@media (max-width: 639px) {
+  .ins-fact:last-child:nth-child(odd) { grid-column: span 2; }
+}
+
 /* ── Article body ──────────────────────────────────────────── */
 .prose-h { color: #2c3f57; font-size: 17.5px; line-height: 1.75; }
 .prose-h > * + * { margin-top: 1.15em; }

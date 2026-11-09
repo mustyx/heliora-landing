@@ -27,6 +27,12 @@ const { marked } = require('marked');
 const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'content', 'insights');
 const OUT = path.join(ROOT, 'insights');
+// Service landing pages (used by Google Ads ad groups) share the same templates.
+//   content/services/<slug>.md  ->  services/<slug>/index.html
+// Front matter: title, description, eyebrow, facts ("Label: value | Label: value"),
+// related (comma-separated Insights slugs), optional seo_title, updated.
+const SRC_SERVICES = path.join(ROOT, 'content', 'services');
+const OUT_SERVICES = path.join(ROOT, 'services');
 const SITE = 'https://helioraconsulting.com';
 const AUTHOR = 'Heliora Engineering Team';
 const WPM = 220;
@@ -43,8 +49,8 @@ function gitDate(file) {
   catch { return today; }
 }
 
-function parse(file) {
-  const raw = fs.readFileSync(path.join(SRC, file), 'utf8').replace(/\r\n/g, '\n');
+function parse(file, dir = SRC, required = ['title', 'description', 'date', 'category']) {
+  const raw = fs.readFileSync(path.join(dir, file), 'utf8').replace(/\r\n/g, '\n');
   const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!m) throw new Error(`${file}: missing front matter`);
   const meta = {};
@@ -52,7 +58,7 @@ function parse(file) {
     const kv = line.match(/^(\w+):\s*(.*)$/);
     if (kv) meta[kv[1]] = kv[2].replace(/^["']|["']$/g, '').trim();
   }
-  for (const k of ['title', 'description', 'date', 'category']) {
+  for (const k of required) {
     if (!meta[k]) throw new Error(`${file}: front matter needs "${k}"`);
   }
   const body = m[2].trim();
@@ -75,7 +81,10 @@ if (!tracking) console.warn('! tracking block not found in index.html; blog page
 const v = hash('assets/css/tailwind.css', 'assets/css/style-rebrand.css', 'assets/css/insights.css');
 
 // ── shared page parts ───────────────────────────────────────────────────
-function head({ title, description, url, type = 'website', jsonld }) {
+function head({ title, description, url, type = 'website', jsonld, section = 'insights' }) {
+  const navLink = (href, label, key) => section === key
+    ? `<li><a href="${href}" class="nav-link active text-[13px] text-h-body transition-colors" aria-current="page">${label}</a></li>`
+    : `<li><a href="${href}" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">${label}</a></li>`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,10 +118,10 @@ function head({ title, description, url, type = 'website', jsonld }) {
     </a>
     <nav aria-label="Main" class="hidden lg:block">
       <ul class="flex items-center gap-7">
-        <li><a href="/#roadmap" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Services</a></li>
+        ${navLink('/#roadmap', 'Services', 'services')}
         <li><a href="/#clients" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Who We Serve</a></li>
         <li><a href="/#about" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">About</a></li>
-        <li><a href="/insights/" class="nav-link active text-[13px] text-h-body transition-colors" aria-current="page">Insights</a></li>
+        ${navLink('/insights/', 'Insights', 'insights')}
         <li><a href="/#contact" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Contact</a></li>
       </ul>
     </nav>
@@ -232,6 +241,82 @@ ${more ? `
 ` + footer + end;
 }
 
+// ── service landing page ────────────────────────────────────────────────
+function servicePage(s, posts) {
+  const url = `${SITE}/services/${s.slug}/`;
+  const facts = (s.facts || '').split('|').map((f) => f.split(':')).filter((f) => f.length >= 2)
+    .map(([k, ...v]) => `
+        <div class="ins-fact">
+          <dt class="text-[12px] font-semibold tracking-[0.12em] uppercase text-h-muted mb-1">${esc(k.trim())}</dt>
+          <dd class="text-[16px] font-semibold text-h-body">${esc(v.join(':').trim())}</dd>
+        </div>`).join('');
+  const related = (s.related || '').split(',').map((x) => x.trim()).filter(Boolean)
+    .map((slug) => posts.find((p) => p.slug === slug)).filter(Boolean);
+  const jsonld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Service',
+        name: s.title,
+        description: s.description,
+        serviceType: s.eyebrow,
+        url,
+        areaServed: [{ '@type': 'Country', name: 'Nigeria' }, { '@type': 'Place', name: 'Africa' }],
+        provider: { '@type': 'Organization', name: 'Heliora Consulting Limited', url: SITE, email: 'contact@helioraconsulting.com' },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+          { '@type': 'ListItem', position: 2, name: 'Services', item: `${SITE}/#roadmap` },
+          { '@type': 'ListItem', position: 3, name: s.eyebrow, item: url },
+        ],
+      },
+    ],
+  };
+
+  const more = related.map((o) => `
+        <li>
+          <a href="/insights/${o.slug}/" class="ins-more group block py-6 border-t border-h-divider">
+            <span class="block text-[12px] font-semibold tracking-[0.12em] uppercase text-h-teal mb-2">${esc(o.category)}</span>
+            <span class="ins-more-title block text-[20px] leading-snug text-h-body group-hover:text-h-teal transition-colors">${esc(o.title)}</span>
+          </a>
+        </li>`).join('');
+
+  return head({ title: s.seo_title || `${s.title} | Heliora Consulting`, description: s.description, url, jsonld, section: 'services' }) + `
+<main id="main">
+  <section class="max-w-[760px] mx-auto px-5 pt-12 lg:pt-20 pb-10">
+    <nav aria-label="Breadcrumb" class="text-[13px] text-h-muted mb-8">
+      <a href="/#roadmap" class="hover:text-h-teal transition-colors">Services</a>
+      <span aria-hidden="true" class="mx-2">/</span>
+      <span>${esc(s.eyebrow)}</span>
+    </nav>
+    <p class="section-eyebrow text-h-teal">${esc(s.eyebrow)}</p>
+    <h1 class="text-[clamp(34px,5vw,52px)] leading-[1.08] text-h-body mb-6">${esc(s.title)}</h1>
+    <p class="text-[19px] leading-[1.6] text-h-mid mb-8">${esc(s.description)}</p>
+    <a href="/#contact" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-h-teal hover:bg-h-tealc text-white text-[15px] font-semibold transition-colors duration-200">
+      Discuss Your Project <span aria-hidden="true">&rarr;</span>
+    </a>${facts ? `
+    <dl class="ins-facts grid grid-cols-2 sm:grid-cols-3 gap-px mt-10 rounded-2xl border border-h-divider bg-h-divider overflow-hidden">${facts}
+    </dl>` : ''}
+  </section>
+
+  <div class="prose-h max-w-[760px] mx-auto px-5 pb-16">
+${s.html}
+  </div>
+
+  <div class="max-w-[760px] mx-auto px-5 pb-16">${cta('Tell us where your project stands.', 'A senior Heliora engineer will reply within 24 hours for a scoping call. If we are not the right fit, we will say so.')}
+  </div>
+${more ? `
+  <section class="max-w-[760px] mx-auto px-5 pb-20" aria-labelledby="more-heading">
+    <h2 id="more-heading" class="text-[24px] text-h-body mb-2">Related reading</h2>
+    <ul>${more}
+    </ul>
+  </section>` : ''}
+</main>
+` + footer + end;
+}
+
 // ── index page ──────────────────────────────────────────────────────────
 function indexPage(posts) {
   const url = `${SITE}/insights/`;
@@ -281,10 +366,11 @@ function indexPage(posts) {
 }
 
 // ── sitemap ─────────────────────────────────────────────────────────────
-function sitemap(posts) {
+function sitemap(posts, services) {
   const latest = posts.reduce((d, p) => ((p.updated || p.date) > d ? (p.updated || p.date) : d), '0000');
   const urls = [
     { loc: `${SITE}/`, lastmod: gitDate('index.html') },
+    ...services.map((s) => ({ loc: `${SITE}/services/${s.slug}/`, lastmod: s.updated || gitDate(`content/services/${s.slug}.md`) })),
     { loc: `${SITE}/insights/`, lastmod: latest },
     ...posts.map((p) => ({ loc: `${SITE}/insights/${p.slug}/`, lastmod: p.updated || p.date })),
     { loc: `${SITE}/privacy.html`, lastmod: gitDate('privacy.html') },
@@ -297,7 +383,7 @@ ${urls.map((u) => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</
 }
 
 // ── build ───────────────────────────────────────────────────────────────
-const posts = fs.readdirSync(SRC).filter((f) => f.endsWith('.md')).map(parse)
+const posts = fs.readdirSync(SRC).filter((f) => f.endsWith('.md')).map((f) => parse(f))
   .filter((p) => !p.draft)
   .sort((a, b) => b.date.localeCompare(a.date) || (+a.order || 99) - (+b.order || 99) || a.title.localeCompare(b.title));
 
@@ -314,5 +400,16 @@ for (const p of posts) {
   fs.writeFileSync(path.join(OUT, p.slug, 'index.html'), articlePage(p, posts.filter((o) => o !== p)));
 }
 fs.writeFileSync(path.join(OUT, 'index.html'), indexPage(posts));
-fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts));
-console.log(`Built ${posts.length} article(s) + insights index + sitemap.xml`);
+
+const services = fs.existsSync(SRC_SERVICES)
+  ? fs.readdirSync(SRC_SERVICES).filter((f) => f.endsWith('.md'))
+    .map((f) => parse(f, SRC_SERVICES, ['title', 'description', 'eyebrow'])).filter((s) => !s.draft)
+  : [];
+if (fs.existsSync(OUT_SERVICES)) fs.rmSync(OUT_SERVICES, { recursive: true });
+for (const s of services) {
+  fs.mkdirSync(path.join(OUT_SERVICES, s.slug), { recursive: true });
+  fs.writeFileSync(path.join(OUT_SERVICES, s.slug, 'index.html'), servicePage(s, posts));
+}
+
+fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, services));
+console.log(`Built ${posts.length} article(s), ${services.length} service page(s), insights index + sitemap.xml`);

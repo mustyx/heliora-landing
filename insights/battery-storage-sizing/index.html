@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sizing battery storage for a mini-grid or C&amp;I site: what drives the number | Heliora Insights</title>
+  <meta name="description" content="Batteries are often the most expensive line in a solar project and the easiest to get wrong. Here is what actually sets the size, a worked example, and the mistakes that leave a system short in year five." />
+  <link rel="canonical" href="https://helioraconsulting.com/insights/battery-storage-sizing/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Heliora Consulting Limited" />
+  <meta property="og:title" content="Sizing battery storage for a mini-grid or C&amp;I site: what drives the number | Heliora Insights" />
+  <meta property="og:description" content="Batteries are often the most expensive line in a solar project and the easiest to get wrong. Here is what actually sets the size, a worked example, and the mistakes that leave a system short in year five." />
+  <meta property="og:url" content="https://helioraconsulting.com/insights/battery-storage-sizing/" />
+  <meta property="og:image" content="https://helioraconsulting.com/assets/images/og-insights.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/assets/images/logo-2026.png" />
+  <link rel="preload" href="/assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/tailwind.css?v=a7291e5484" />
+  <link rel="stylesheet" href="/assets/css/style-rebrand.css?v=a7291e5484" />
+  <link rel="stylesheet" href="/assets/css/insights.css?v=a7291e5484" />
+  <link rel="stylesheet" href="/assets/css/fonts.css?v=a7291e5484" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","headline":"Sizing battery storage for a mini-grid or C&I site: what drives the number","description":"Batteries are often the most expensive line in a solar project and the easiest to get wrong. Here is what actually sets the size, a worked example, and the mistakes that leave a system short in year five.","datePublished":"2026-11-09","dateModified":"2026-11-09","mainEntityOfPage":"https://helioraconsulting.com/insights/battery-storage-sizing/","image":"https://helioraconsulting.com/assets/images/og-insights.jpg","author":{"@type":"Organization","name":"Heliora Engineering Team","url":"https://helioraconsulting.com"},"publisher":{"@type":"Organization","name":"Heliora Consulting Limited","url":"https://helioraconsulting.com","logo":{"@type":"ImageObject","url":"https://helioraconsulting.com/assets/images/heliora-lockup.png"}},"articleSection":"Battery Storage"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://helioraconsulting.com/"},{"@type":"ListItem","position":2,"name":"Insights","item":"https://helioraconsulting.com/insights/"},{"@type":"ListItem","position":3,"name":"Sizing battery storage for a mini-grid or C&I site: what drives the number","item":"https://helioraconsulting.com/insights/battery-storage-sizing/"}]}]}</script>
+</head>
+<body class="bg-white text-h-body font-sans antialiased">
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="ins-header sticky top-0 z-50 bg-white/95 border-b border-h-divider">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12 h-16 flex items-center justify-between gap-6">
+    <a href="/" class="inline-flex items-center flex-shrink-0">
+      <img src="/assets/images/heliora-lockup-300.webp?v=202611011300" width="300" height="99" alt="Heliora Consulting Limited" class="h-10 w-auto" />
+    </a>
+    <nav aria-label="Main" class="hidden lg:block">
+      <ul class="flex items-center gap-7">
+        <li><a href="/#roadmap" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Services</a></li>
+        <li><a href="/#clients" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Who We Serve</a></li>
+        <li><a href="/#about" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">About</a></li>
+        <li><a href="/insights/" class="nav-link active text-[13px] text-h-body transition-colors" aria-current="page">Insights</a></li>
+        <li><a href="/#contact" class="nav-link text-[13px] text-h-mid hover:text-h-body transition-colors">Contact</a></li>
+      </ul>
+    </nav>
+    <a href="/#contact" class="inline-flex items-center px-4 lg:px-5 py-2.5 rounded-lg bg-h-teal hover:bg-h-tealc text-white text-[13px] font-semibold transition-colors duration-200">Discuss Your Project</a>
+  </div>
+</header>
+
+<main id="main">
+  <article>
+    <header class="max-w-[760px] mx-auto px-5 pt-12 lg:pt-20 pb-8">
+      <nav aria-label="Breadcrumb" class="text-[13px] text-h-muted mb-8">
+        <a href="/insights/" class="hover:text-h-teal transition-colors">Insights</a>
+        <span aria-hidden="true" class="mx-2">/</span>
+        <span>Battery Storage</span>
+      </nav>
+      <h1 class="text-[clamp(34px,5vw,52px)] leading-[1.08] text-h-body mb-6">Sizing battery storage for a mini-grid or C&amp;I site: what drives the number</h1>
+      <p class="text-[19px] leading-[1.6] text-h-mid mb-8">Batteries are often the most expensive line in a solar project and the easiest to get wrong. Here is what actually sets the size, a worked example, and the mistakes that leave a system short in year five.</p>
+      <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-h-muted pb-8 border-b border-h-divider">
+        <span class="text-h-body font-semibold">Heliora Engineering Team</span><span aria-hidden="true">&middot;</span><time datetime="2026-11-09">9 November 2026</time><span aria-hidden="true">&middot;</span><span>3 min read</span>
+      </p>
+    </header>
+
+    <div class="prose-h max-w-[760px] mx-auto px-5 pb-16">
+<p>On many mini-grids and off-grid commercial sites, the battery bank is the largest single cost after the solar array, and it is the component most likely to be replaced during the project&#39;s life. Size it too small and the system runs out of energy every evening. Size it too big and you pay for capacity that never cycles. The right number comes from a handful of inputs, each of which can be measured or checked.</p>
+<h2>Energy, not just power</h2>
+<p>Battery storage has two separate ratings:</p>
+<ul>
+<li><strong>Energy (kWh):</strong> how much the battery can deliver over the evening and night.</li>
+<li><strong>Power (kW):</strong> how fast it can deliver it, set by the battery&#39;s discharge limit and the inverter rating.</li>
+</ul>
+<p>A common mistake is to size one and assume the other follows. A site with a modest night load but a large motor starting at 7 pm needs enough power to handle the surge, even if the energy requirement is small.</p>
+<h2>What sets the energy requirement</h2>
+<ol>
+<li><strong>Night-time energy.</strong> The kilowatt-hours used between sunset and sunrise, taken from the measured or surveyed hourly load profile.</li>
+<li><strong>Autonomy.</strong> How many cloudy days the site must ride through on storage alone. On a hybrid site with a generator, this can be low, because the generator covers the bad days. On a fully solar site it has to be higher.</li>
+<li><strong>Usable depth of discharge.</strong> Lithium iron phosphate (LFP) batteries are usually operated within about 80–90% of their nameplate capacity to protect their life. Lead-acid needs a much shallower window.</li>
+<li><strong>Efficiency losses.</strong> Energy is lost in the battery and the inverter on the way out.</li>
+<li><strong>End-of-life capacity.</strong> Batteries lose capacity as they age. A battery that is just big enough on day one will be too small in year five. Design for the capacity it will have at its planned replacement point, often around 80% of new.</li>
+<li><strong>Growth.</strong> On a mini-grid, demand usually rises as customers add appliances and businesses. Plan for it, or leave space and electrical capacity to add modules later.</li>
+</ol>
+<h2>A worked example</h2>
+<p>Take a site with 300 kWh of night-time demand, one day of autonomy, an LFP battery used across 90% of its capacity, 95% efficiency on the discharge path, and a design that holds until the battery reaches 80% of its original capacity.</p>
+<p>Required nameplate capacity = 300 ÷ (0.90 × 0.95 × 0.80) ≈ <strong>440 kWh</strong></p>
+<p>The site uses 300 kWh a night, but needs about 440 kWh of battery to still deliver it reliably late in the battery&#39;s life. Add autonomy or growth and the number rises quickly. That is why autonomy is usually the first assumption to test.</p>
+<h2>Where the generator fits</h2>
+<p>On hybrid systems, the cheapest answer is rarely &quot;all battery&quot;. A generator that runs for a few hours on the worst days can replace a large block of storage that would otherwise sit unused most of the year. Tools such as HOMER Pro model this trade-off hour by hour across a full year of solar data. They show the mix of PV, battery and generator with the lowest lifetime cost, and how much diesel it still burns.</p>
+<h2>Mistakes we see in proposals</h2>
+<blockquote>
+<ul>
+<li>Battery sized in kW, or to the inverter, with no energy calculation shown</li>
+<li>Nameplate capacity treated as fully usable</li>
+<li>No allowance for ageing, so the system falls short years before replacement is planned</li>
+<li>Autonomy chosen by habit rather than from the site&#39;s weather and backup options</li>
+<li>No battery replacement cost in the financial model</li>
+<li>No ventilation, temperature control or fire safety in the power house design</li>
+</ul>
+</blockquote>
+<p>Temperature matters too. High ambient temperatures shorten battery life, so the power house design affects the battery&#39;s real lifetime as much as the battery specification does.</p>
+<h2>Get the inputs right first</h2>
+<p>Every number in the battery calculation depends on the load profile. If the night-time demand is a guess, so is the battery. Measure or survey the demand, test the autonomy assumption against the site&#39;s backup options, and design for end of life. Get those right and the battery size stops being a matter of opinion.</p>
+
+    </div>
+  </article>
+
+  <div class="max-w-[760px] mx-auto px-5 pb-16">
+  <aside class="ins-cta bg-h-navy text-white rounded-3xl px-7 py-10 sm:px-12 sm:py-12" aria-label="Talk to Heliora">
+    <p class="section-eyebrow text-h-orangeb">Talk to an engineer</p>
+    <h2 class="text-[clamp(26px,3.4vw,36px)] leading-[1.12] text-white mb-4 max-w-[22ch]">Planning a project like this one?</h2>
+    <p class="text-white/75 text-[16px] leading-relaxed max-w-[52ch] mb-8">Tell us where your project stands. A senior Heliora engineer will reply within 24 hours for a scoping call. It costs nothing and commits you to nothing.</p>
+    <a href="/#contact" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-h-teal hover:bg-h-tealb text-white text-[15px] font-semibold transition-colors duration-200">
+      Discuss Your Project <span aria-hidden="true">&rarr;</span>
+    </a>
+  </aside>
+  </div>
+
+  <section class="max-w-[760px] mx-auto px-5 pb-20" aria-labelledby="more-heading">
+    <h2 id="more-heading" class="text-[24px] text-h-body mb-2">More from Insights</h2>
+    <ul>
+        <li>
+          <a href="/insights/owners-engineer-solar-mini-grid/" class="ins-more group block py-6 border-t border-h-divider">
+            <span class="block text-[12px] font-semibold tracking-[0.12em] uppercase text-h-teal mb-2">Owner's Engineer</span>
+            <span class="ins-more-title block text-[20px] leading-snug text-h-body group-hover:text-h-teal transition-colors">What an Owner's Engineer actually does on a solar mini-grid project</span>
+          </a>
+        </li>
+        <li>
+          <a href="/insights/bankable-solar-feasibility-study/" class="ins-more group block py-6 border-t border-h-divider">
+            <span class="block text-[12px] font-semibold tracking-[0.12em] uppercase text-h-teal mb-2">Feasibility</span>
+            <span class="ins-more-title block text-[20px] leading-snug text-h-body group-hover:text-h-teal transition-colors">What a bankable solar feasibility study should contain</span>
+          </a>
+        </li>
+        <li>
+          <a href="/insights/ci-solar-replacing-diesel/" class="ins-more group block py-6 border-t border-h-divider">
+            <span class="block text-[12px] font-semibold tracking-[0.12em] uppercase text-h-teal mb-2">C&amp;I Solar</span>
+            <span class="ins-more-title block text-[20px] leading-snug text-h-body group-hover:text-h-teal transition-colors">Replacing diesel with solar: what your load data should tell you first</span>
+          </a>
+        </li>
+    </ul>
+  </section>
+</main>
+
+<footer class="bg-h-offwhite border-t border-h-divider py-10">
+  <div class="max-w-screen-xl mx-auto px-5 lg:px-12 flex flex-col md:flex-row justify-between gap-6 text-[13px]">
+    <div>
+      <p class="text-h-body font-semibold mb-1">Heliora Consulting Limited</p>
+      <p class="text-h-muted">Bassan Plaza, Central Business District, FCT Abuja, Nigeria</p>
+      <a href="mailto:contact@helioraconsulting.com" class="text-h-muted hover:text-h-teal transition-colors">contact@helioraconsulting.com</a>
+    </div>
+    <ul class="flex flex-wrap gap-x-6 gap-y-2 md:justify-end md:items-start">
+      <li><a href="/" class="text-h-muted hover:text-h-teal transition-colors">Home</a></li>
+      <li><a href="/#roadmap" class="text-h-muted hover:text-h-teal transition-colors">Services</a></li>
+      <li><a href="/insights/" class="text-h-muted hover:text-h-teal transition-colors">Insights</a></li>
+      <li><a href="/privacy.html" class="text-h-muted hover:text-h-teal transition-colors">Privacy Policy</a></li>
+    </ul>
+  </div>
+  <p class="max-w-screen-xl mx-auto px-5 lg:px-12 mt-6 text-h-muted text-[12px]">&copy; 2026 Heliora Consulting Limited. All rights reserved.</p>
+</footer>
+<script>
+/* ── Tracking configuration ───────────────────────────────────────────
+   Paste your IDs below to switch each channel on. While a value is empty
+   that tag never loads. There is no consent banner (removed 9 Nov 2026):
+   every configured tag loads on the first visit, once the page has
+   finished loading, and the footer notice links to the privacy policy.
+     meta                 Meta/Facebook Pixel ID     e.g. '1234567890123456'
+     linkedin             LinkedIn Partner ID        e.g. '1234567'
+     linkedinConversionId LinkedIn Conversion ID     e.g. '9876543' (from Campaign Manager > Conversion Tracking)
+     googleAds            Google Ads conversion ID   e.g. 'AW-123456789'
+     googleAdsLabel       Google Ads conversion label e.g. 'AbC-D_efG-h12_34ijK'
+     ga4                  GA4 measurement ID         e.g. 'G-XXXXXXXXXX'
+     twitter              X (Twitter) pixel ID       e.g. 'rhvk3'
+     twitterLeadEvent     X Lead event ID            e.g. 'tw-rhvk3-rhvk5' (from Events manager > Add event)
+     zohoSalesIQ          Zoho SalesIQ widget code   e.g. 'siqxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+   ─────────────────────────────────────────────────────────────────── */
+window.HELIORA_TRACKING = { meta:'1071599118775013', linkedin:'9438122', linkedinConversionId:'29101866', googleAds:'', googleAdsLabel:'', ga4:'G-YEKKX9KCND', twitter:'rhvk3', twitterLeadEvent:'tw-rhvk3-rhvk5', zohoSalesIQ:'' };
+
+(function(){
+  var T=window.HELIORA_TRACKING;
+
+  function loadTags(){
+    if(T.ga4||T.googleAds){
+      var id=T.ga4||T.googleAds;
+      var s=document.createElement('script'); s.async=true;
+      s.src='https://www.googletagmanager.com/gtag/js?id='+id;
+      document.head.appendChild(s);
+      window.dataLayer=window.dataLayer||[];
+      window.gtag=function(){dataLayer.push(arguments);};
+      gtag('js',new Date());
+      if(T.ga4) gtag('config',T.ga4);
+      if(T.googleAds) gtag('config',T.googleAds);
+    }
+    if(T.meta){
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+      (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init',T.meta); fbq('track','PageView');
+    }
+    if(T.twitter){
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      twq('config',T.twitter);
+    }
+    if(T.linkedin){
+      window._linkedin_partner_id=T.linkedin;
+      window._linkedin_data_partner_ids=window._linkedin_data_partner_ids||[];
+      window._linkedin_data_partner_ids.push(T.linkedin);
+      if(!window.lintrk){
+        window.lintrk=function(a,b){window.lintrk.q.push([a,b]);};
+        window.lintrk.q=[];
+      }
+      var l=document.createElement('script'); l.async=true;
+      l.src='https://snap.licdn.com/li.lms-analytics/insight.min.js';
+      document.head.appendChild(l);
+    }
+    if(T.zohoSalesIQ){
+      window.$zoho=window.$zoho||{};
+      $zoho.salesiq=$zoho.salesiq||{ready:function(){}};
+      var z=document.createElement('script'); z.id='zsiqscript'; z.defer=true;
+      z.src='https://salesiq.zohopublic.com/widget?wc='+T.zohoSalesIQ;
+      document.body.appendChild(z);
+    }
+  }
+
+  // Wait for the load event so the tags don't compete with the hero image
+  // and slow the first paint.
+  if(document.readyState==='complete') loadTags();
+  else window.addEventListener('load',loadTags);
+})();
+</script>
+</body>
+</html>
